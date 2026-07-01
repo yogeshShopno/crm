@@ -143,7 +143,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
         {/* Header */}
-        <div className="bg-[#3B82F6] text-white px-6 py-4 flex items-center justify-between">
+        <div className="bg-primary text-white px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">
             {mode === 'view' ? 'Payment Details' : (isPaid ? 'Edit Payment' : 'Add Payment')}
           </h2>
@@ -198,7 +198,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                     </div>
                     <button
                       onClick={() => setShowProofPreview(!showProofPreview)}
-                      className="text-xs font-medium text-[#3B82F6] hover:text-[#2563EB] cursor-pointer flex items-center gap-1"
+                      className="text-xs font-medium text-primary hover:text-[#2563EB] cursor-pointer flex items-center gap-1"
                     >
                       <Eye className="h-3.5 w-3.5" />
                       {showProofPreview ? 'Hide' : 'Preview'}
@@ -234,7 +234,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               </button>
               <button
                 onClick={() => setMode('form')}
-                className="flex-1 py-2 text-sm font-medium text-white bg-[#3B82F6] rounded-md hover:bg-[#2563EB] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-[#2563EB] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Pencil className="h-3.5 w-3.5" />
                 Edit Payment
@@ -251,7 +251,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               {/* Amount */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                  <span className="text-[#3B82F6] font-bold">₹</span> Amount <span className="text-red-500">*</span>
+                  <span className="text-primary font-bold">₹</span> Amount <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -272,7 +272,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                   placeholder="Enter amount"
                   disabled
                   readOnly
-                  className={`w-full border ${errors.amount ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] bg-gray-100 cursor-not-allowed`}
+                  className={`w-full border ${errors.amount ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring bg-gray-100 cursor-not-allowed`}
                 />
                 {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
               </div>
@@ -280,7 +280,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               {/* Payment Date */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                  <Calendar className="h-4 w-4 text-[#3B82F6]" /> Payment Date <span className="text-red-500">*</span>
+                  <Calendar className="h-4 w-4 text-primary" /> Payment Date <span className="text-red-500">*</span>
                 </label>
                 <DatePicker
                   value={paymentDate}
@@ -296,7 +296,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               {/* Payment Mode */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                  <CreditCard className="h-4 w-4 text-[#3B82F6]" /> Payment Mode <span className="text-red-500">*</span>
+                  <CreditCard className="h-4 w-4 text-primary" /> Payment Mode <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-3 gap-3">
                   {['Cash', 'GPay', 'Bank Transfer'].map((m) => (
@@ -308,7 +308,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                       }}
                       className={`py-2 text-sm font-medium rounded-md border cursor-pointer transition-colors ${
                         paymentMode === m
-                          ? 'border-[#3B82F6] text-[#3B82F6] bg-blue-50'
+                          ? 'border-primary text-primary bg-blue-50'
                           : errors.mode
                             ? 'border-red-500 text-red-500 hover:bg-red-50'
                             : 'border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -324,7 +324,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               {/* Payment Proof */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                  <ImageIcon className="h-4 w-4 text-[#3B82F6]" /> Payment Proof {isPaid ? '(Upload new to replace)' : '(Optional)'}
+                  <ImageIcon className="h-4 w-4 text-primary" /> Payment Proof {isPaid ? '(Upload new to replace)' : '(Optional)'}
                 </label>
                 {isPaid && lead?.paymentProof && (
                     <div className="mb-2">
@@ -345,7 +345,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept=".jpg,.jpeg,.png,.webp"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-[#3B82F6] hover:file:bg-blue-100"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary hover:file:bg-blue-100"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP — Max 2MB</p>
@@ -369,7 +369,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex-1 py-2 text-sm font-medium text-white bg-[#3B82F6] rounded-md hover:bg-[#2563EB] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-[#2563EB] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? 'Saving...' : (isPaid ? 'Update Payment' : 'Save Payment')}
               </button>

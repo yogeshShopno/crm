@@ -13,10 +13,22 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: null,
-  user: null,
-  role: null,
-  permissions: null,
+  token: 'mock-token',
+  user: {
+    _id: 'mock-user-1',
+    fullName: 'Sample Admin',
+    email: 'admin@sample.com',
+  },
+  role: 'admin',
+  permissions: {
+    lead: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    task: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    staff: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    role: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    leadStatus: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    leadSource: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+    setup: { readAll: true, readOwn: true, create: true, edit: true, delete: true },
+  },
 };
 
 const authSlice = createSlice({

@@ -11,6 +11,7 @@ import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import axios from "axios";
+// import "@/mockAxiosAdapter"; // Disabled client-side mock, now using real Next.js API route to update mockData.json on disk
 import { clearAuthToken } from "@/config";
 
 const poppins = Poppins({
@@ -21,41 +22,11 @@ const poppins = Poppins({
 });
 
 if (typeof window !== "undefined") {
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
-        clearAuthToken();
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
+  // Axios interceptors removed to allow mock data without auth tokens
 }
 
 function AuthGuard({ children, isLoginPage }: { children: React.ReactNode; isLoginPage: boolean }) {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!token && !isLoginPage) {
-      router.replace("/login");
-    } else if (token && isLoginPage) {
-      router.replace("/");
-    }
-  }, [token, isLoginPage, router]);
-
-  // Show clean spinner while routing if unauthenticated
-  if (!token && !isLoginPage) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0b2a55] border-t-transparent"></div>
-      </div>
-    );
-  }
-
+  // Authentication removed as requested
   return <>{children}</>;
 }
 

@@ -19,6 +19,7 @@ import {
   Handshake,
   Flag,
   IndianRupee,
+  Building2,
 } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -68,27 +69,19 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   // Lead Status menu item
   // menuItems.push({ icon: Flag, label: "Lead Status", path: "/setup?tab=Lead+Status" });
 
-  // Always allow viewing Resellers for now or if they have permission
-  // menuItems.push({ icon: Handshake, label: "Resellers", path: "/resellers" });
-  if (userRole && userRole.toLowerCase() !== 'reseller' && userRole.toLowerCase() === 'admin') {
-    menuItems.push({ icon: Handshake, label: "Resellers", path: "/resellers" });
-  }
-  if (userRole) {
-    menuItems.push({ icon: IndianRupee, label: "Settlements", path: "/settlements" });
-    menuItems.push({ icon: CheckSquare, label: "Ledger", path: "/ledger" });
-  }
+  menuItems.push({ icon: Handshake, label: "Resellers", path: "/resellers" });
+  menuItems.push({ icon: Building2, label: "Departments", path: "/departments" });
+  menuItems.push({ icon: IndianRupee, label: "Settlements", path: "/settlements" });
+  menuItems.push({ icon: CheckSquare, label: "Ledger", path: "/ledger" });
 
-  const hasAnySetupPerm = canViewStaff || canViewRole || canViewLeadStatus || canViewLeadSource;
+  const hasAnySetupPerm = true; // Bypassed
 
-  // if (hasAnySetupPerm) {
-  if (userRole?.toLowerCase() !== 'admin') {
-    menuItems.push({
-      icon: Settings,
-      label: "Setup",
-      path: "/setup",
-    });
-  }
-  // }
+  menuItems.push({
+    icon: Settings,
+    label: "Setup",
+    path: "/setup",
+  });
+
 
   const isActive = (path?: string) => {
     if (!path) return false;
@@ -189,7 +182,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 h-screen bg-[#3B82F6] text-white shadow-2xl transition-all duration-300 ease-in-out ${isOpen
+        className={`fixed top-0 left-0 z-40 h-screen bg-primary text-white shadow-2xl transition-all duration-300 ease-in-out ${isOpen
           ? 'w-64 translate-x-0'
           : 'w-64 -translate-x-full md:w-20 md:translate-x-0'
           }`}
@@ -198,7 +191,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           {/* Header with Logo */}
           <div className={`flex items-center h-20 px-4 border-b border-white/10 ${isOpen ? 'justify-between' : 'justify-center'}`}>
             <div className={`flex items-center gap-3 ${!isOpen && 'hidden md:flex'}`}>
-              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold text-[#3B82F6] shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold text-primary shadow-lg">
                 RP
               </div>
               {isOpen && <span className="text-lg font-semibold text-white tracking-wide">Reseller Panel</span>}
@@ -277,11 +270,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                       <button
                         onClick={() => handleNavigation(item.path)}
                         className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 group ${isItemActive
-                          ? 'bg-white text-[#3B82F6]'
+                          ? 'bg-white text-primary'
                           : 'text-white hover:bg-white/5 hover:text-white'
                           }`}
                       >
-                        <Icon className={`h-5 w-5 flex-shrink-0 transition-transform group-hover:scale-110 ${isItemActive ? 'text-[#3B82F6]' : 'text-white'
+                        <Icon className={`h-5 w-5 flex-shrink-0 transition-transform group-hover:scale-110 ${isItemActive ? 'text-primary' : 'text-white'
                           }`} />
                         {isOpen && (
                           <span className="text-sm font-medium">{item.label}</span>

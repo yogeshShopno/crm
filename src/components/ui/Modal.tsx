@@ -30,20 +30,20 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'md
       {/* Sliding Modal */}
       <div
         className={`
-          relative h-full ${widthClasses[maxWidth]} bg-white rounded-l-xl shadow-xl flex flex-col
+          relative h-full ${widthClasses[maxWidth]} bg-background rounded-l-xl shadow-xl flex flex-col
           transform transition-transform duration-300
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}
         `}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-800">{title}</h3>
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-secondary rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-slate-600" />
+            <X className="w-5 h-5 text-foreground/70" />
           </button>
         </div>
 

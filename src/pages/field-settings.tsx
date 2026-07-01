@@ -87,7 +87,7 @@ export function FieldSettingsContent() {
           <h2 className="text-xl font-semibold text-gray-900">Field Settings</h2>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-6 py-2 bg-[#3B82F6] text-white rounded-lg transition-colors font-medium shadow-sm"
+            className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg transition-colors font-medium shadow-sm"
           >
             <Save className="h-4 w-4" />
             Save Settings

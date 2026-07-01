@@ -1,0 +1,279 @@
+{
+  "users": [
+    {
+      "_id": "user1",
+      "fullName": "Alice Smith",
+      "email": "alice@example.com",
+      "phone": "+1234567890",
+      "role": "Admin",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+    },
+    {
+      "_id": "user2",
+      "fullName": "Bob Jones",
+      "email": "bob@example.com",
+      "phone": "+1987654321",
+      "role": "Sales",
+      "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+    }
+  ],
+  "sources": [
+    {
+      "_id": "source1",
+      "name": "Website"
+    },
+    {
+      "_id": "source2",
+      "name": "Referral"
+    },
+    {
+      "_id": "source3",
+      "name": "Cold Call"
+    }
+  ],
+  "statuses": [
+    {
+      "_id": "status1",
+      "name": "New"
+    },
+    {
+      "_id": "status2",
+      "name": "Contacted"
+    },
+    {
+      "_id": "status3",
+      "name": "Follow-Up"
+    },
+    {
+      "_id": "status4",
+      "name": "Interested"
+    },
+    {
+      "_id": "status5",
+      "name": "Qualified"
+    },
+    {
+      "_id": "status6",
+      "name": "Not Interested"
+    },
+    {
+      "_id": "status7",
+      "name": "Lost"
+    },
+    {
+      "_id": "status8",
+      "name": "Won"
+    }
+  ],
+  "leads": [
+    {
+      "_id": "lead1",
+      "fullName": "John Doe",
+      "companyName": "Acme Corp",
+      "address": "123 Main St",
+      "contact": "+1122334455",
+      "email": "john.doe@acme.com",
+      "leadSource": {
+        "_id": "source1",
+        "name": "Website"
+      },
+      "product": "CRM Pro",
+      "paymentAmount": 5000,
+      "leadStatus": {
+        "_id": "status6",
+        "name": "Not Interested"
+      },
+      "assignedTo": {
+        "_id": "user1",
+        "fullName": "Alice Smith"
+      },
+      "isActive": true
+    },
+    {
+      "_id": "lead2",
+      "fullName": "Jane Roe",
+      "companyName": "TechStart",
+      "address": "456 Oak Ave",
+      "contact": "+9988776655",
+      "email": "jane.roe@techstart.io",
+      "leadSource": {
+        "_id": "source2",
+        "name": "Referral"
+      },
+      "product": "Enterprise Suite",
+      "paymentAmount": 12000,
+      "leadStatus": {
+        "_id": "status3",
+        "name": "Qualified"
+      },
+      "assignedTo": {
+        "_id": "user2",
+        "fullName": "Bob Jones"
+      },
+      "isActive": true
+    },
+    {
+      "_id": "lead3",
+      "fullName": "Michael Scott",
+      "companyName": "Dunder Mifflin",
+      "address": "Scranton, PA",
+      "contact": "+1555666777",
+      "email": "mscott@dundermifflin.com",
+      "leadSource": {
+        "_id": "source3",
+        "name": "Cold Call"
+      },
+      "product": "Paper Supply",
+      "paymentAmount": 1500,
+      "leadStatus": {
+        "_id": "status2",
+        "name": "Contacted"
+      },
+      "assignedTo": {
+        "_id": "user1",
+        "fullName": "Alice Smith"
+      },
+      "isActive": true
+    }
+  ],
+  "kanbanData": [
+    {
+      "statusId": "status1",
+      "statusName": "New",
+      "leads": [
+        {
+          "_id": "lead1",
+          "fullName": "John Doe",
+          "companyName": "Acme Corp",
+          "contact": "+1122334455",
+          "email": "john.doe@acme.com",
+          "leadSource": {
+            "_id": "source1",
+            "name": "Website"
+          },
+          "paymentAmount": 5000,
+          "leadStatus": {
+            "_id": "status1",
+            "name": "New"
+          },
+          "assignedTo": {
+            "_id": "user1",
+            "fullName": "Alice Smith",
+            "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+          }
+        }
+      ]
+    },
+    {
+      "statusId": "status2",
+      "statusName": "Contacted",
+      "leads": [
+        {
+          "_id": "lead2",
+          "fullName": "Jane Roe",
+          "companyName": "TechStart",
+          "contact": "+9988776655",
+          "email": "jane.roe@techstart.io",
+          "leadSource": {
+            "_id": "source2",
+            "name": "Referral"
+          },
+          "paymentAmount": 12000,
+          "leadStatus": {
+            "_id": "status2",
+            "name": "Contacted"
+          },
+          "assignedTo": {
+            "_id": "user2",
+            "fullName": "Bob Jones",
+            "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+          }
+        }
+      ]
+    },
+    {
+      "statusId": "status3",
+      "statusName": "Qualified",
+      "leads": [
+        {
+          "_id": "lead3",
+          "fullName": "Michael Scott",
+          "companyName": "Dunder Mifflin",
+          "contact": "+1555666777",
+          "email": "mscott@dundermifflin.com",
+          "leadSource": {
+            "_id": "source3",
+            "name": "Cold Call"
+          },
+          "paymentAmount": 1500,
+          "leadStatus": {
+            "_id": "status3",
+            "name": "Qualified"
+          },
+          "assignedTo": {
+            "_id": "user1",
+            "fullName": "Alice Smith",
+            "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+          }
+        }
+      ]
+    },
+    {
+      "statusId": "status4",
+      "statusName": "Proposal",
+      "leads": []
+    },
+    {
+      "statusId": "status5",
+      "statusName": "Negotiation",
+      "leads": []
+    }
+  ],
+  "tasks": [],
+  "settlements": [],
+  "roles": [
+    {
+      "_id": "role1",
+      "roleName": "Admin"
+    },
+    {
+      "_id": "role2",
+      "roleName": "Reseller"
+    }
+  ],
+  "teams": [
+    {
+      "_id": "team1",
+      "name": "Alpha Squad"
+    },
+    {
+      "_id": "team2",
+      "name": "Beta Force"
+    }
+  ],
+  "organizations": [
+    {
+      "_id": "org1",
+      "name": "Acme Corp"
+    },
+    {
+      "_id": "org2",
+      "name": "Global Tech"
+    }
+  ],
+  "taskstatuses": [
+    {
+      "_id": "ts1",
+      "name": "Pending"
+    },
+    {
+      "_id": "ts2",
+      "name": "In Progress"
+    },
+    {
+      "_id": "ts3",
+      "name": "Completed"
+    }
+  ],
+  "departments": []
+}

@@ -14,10 +14,10 @@ export interface SelectOption {
 // ─── Base border/ring utility ──────────────────────────────────────────────────
 
 function getBorderClasses(hasError: boolean, isFocused: boolean, disabled: boolean): string {
-  if (disabled) return "border-gray-200 bg-gray-50/50 opacity-60 cursor-not-allowed";
-  if (hasError) return "border-red-500 ring-1 ring-red-500";
-  if (isFocused) return "border-secondary ring-1 ring-blue-500";
-  return "border-gray-300 hover:border-gray-400 shadow-sm hover:shadow-md";
+  if (disabled) return "border-border bg-secondary/50 opacity-60 cursor-not-allowed";
+  if (hasError) return "border-destructive ring-1 ring-destructive";
+  if (isFocused) return "border-ring ring-1 ring-ring";
+  return "border-border hover:border-foreground/30 shadow-sm hover:shadow-md";
 }
 
 // ─── Portal Dropdown Hook ──────────────────────────────────────────────────────
@@ -134,7 +134,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   const triggerClasses = `
     w-full flex items-center justify-between
     px-4 py-2 rounded-lg border
-    bg-white transition-all duration-300
+    bg-background transition-all duration-300
     outline-none select-none
     ${disabled ? "" : "cursor-pointer"}
     ${icon ? "pl-11" : ""}
@@ -190,7 +190,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
               width: `${coords.width}px`
             }}
           >
-            <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden">
+            <div className="bg-background border border-border rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden">
               <ul className="max-h-64 overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-200">
                 {options.length === 0 ? (
                   <li className="px-4 py-6 text-sm text-gray-400 text-center">No options found</li>
@@ -203,8 +203,8 @@ export const FormSelect: React.FC<FormSelectProps> = ({
                         onClick={() => handleSelect(option)}
                         className={`
                           flex items-center justify-between px-4 py-2.5 text-sm transition-all
-                          ${option.disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-50"}
-                          ${isSelected ? "bg-blue-50/50 text-secondary font-bold" : "text-gray-600"}
+                          ${option.disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-secondary"}
+                          ${isSelected ? "bg-primary/10 text-primary font-bold" : "text-foreground/80"}
                         `}
                       >
                         <span className="flex items-center gap-2.5">
@@ -316,7 +316,7 @@ export const FormMultiSelect: React.FC<FormMultiSelectProps> = ({
   const triggerClasses = `
     w-full flex items-center justify-between gap-2
     px-3 py-1.5 rounded-xl border min-h-[46px]
-    bg-white transition-all duration-300
+    bg-background transition-all duration-300
     outline-none ring-offset-1
     ${disabled ? "" : "cursor-pointer"}
     ${icon ? "pl-11" : ""}
@@ -402,7 +402,7 @@ export const FormMultiSelect: React.FC<FormMultiSelectProps> = ({
               width: `${coords.width}px`
             }}
           >
-            <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden">
+            <div className="bg-background border border-border rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden">
               {maxSelected && (
                 <div className="px-4 py-2 bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 flex justify-between">
                   <span>Capacity</span>
@@ -422,8 +422,8 @@ export const FormMultiSelect: React.FC<FormMultiSelectProps> = ({
                         onClick={() => !isMaxReached && handleSelect(option)}
                         className={`
                           flex items-center gap-3 px-4 py-2.5 text-sm transition-all
-                          ${option.disabled || isMaxReached ? "opacity-40 cursor-not-allowed" : "cursor-pointer hover:bg-gray-50"}
-                          ${isSelected ? "bg-blue-50/50 text-secondary font-bold" : "text-gray-600"}
+                          ${option.disabled || isMaxReached ? "opacity-40 cursor-not-allowed" : "cursor-pointer hover:bg-secondary"}
+                          ${isSelected ? "bg-primary/10 text-primary font-bold" : "text-foreground/80"}
                         `}
                       >
                         <div className={`

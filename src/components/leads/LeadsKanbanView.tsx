@@ -1,7 +1,7 @@
 // components/leads/LeadsKanbanView.tsx
 // Kanban board with Board / Lost / Won sub-views + drag-and-drop
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { FiPhone, FiMail, FiCalendar } from 'react-icons/fi';
 import { formatContactNumber } from "@/utills/utill";
 import axios from 'axios';
@@ -82,6 +82,12 @@ export default function LeadsKanbanView({
     const [loadingMoreMap, setLoadingMoreMap] = useState<Record<string, boolean>>({});
     const [columnCounts, setColumnCounts] = useState<Record<string, number>>({});
 
+    // Keep ref updated to avoid infinite render loops in fetchStatusLeads useCallback dependency
+    const boardLeadsRef = useRef(boardLeads);
+    useEffect(() => {
+        boardLeadsRef.current = boardLeads;
+    }, [boardLeads]);
+
     const [kanbanVisibleStatusNames, setKanbanVisibleStatusNames] = useState<string[]>([]);
 
     useEffect(() => {
@@ -107,9 +113,10 @@ export default function LeadsKanbanView({
     // Fetch leads for a specific status
     const fetchStatusLeads = useCallback(
         async (statusId: string, page = 1, isLoadMore = false, isSilent = false) => {
+            const hasLeads = (boardLeadsRef.current[statusId] || []).length > 0;
             if (isLoadMore) {
                 setLoadingMoreMap((p) => ({ ...p, [statusId]: true }));
-            } else if (!isSilent) {
+            } else if (!isSilent && !hasLeads) {
                 setColumnLoading((p) => ({ ...p, [statusId]: true }));
             }
 
@@ -242,11 +249,7 @@ export default function LeadsKanbanView({
             leads: boardLeads[s._id] || [],
             count: columnCounts[s._id] ?? (counts ? counts[s._id] || 0 : 0),
             isLoading: columnLoading[s._id]
-        }))
-        .filter((group) => {
-            if (kanbanVisibleStatusNames.length === 0) return true;
-            return kanbanVisibleStatusNames.includes(group.title);
-        });
+        }));
 
     const markLost = async (id: string) => {
         try {
@@ -331,7 +334,7 @@ export default function LeadsKanbanView({
                                 key={v}
                                 onClick={() => handleSubViewChange(v)}
                                 className={`rounded-lg cursor-pointer px-4 py-1.5 text-sm font-medium capitalize transition-colors ${subView === v
-                                    ? v === 'lost' ? 'bg-red-600 text-white' : v === 'won' ? 'bg-green-600 text-white' : 'bg-[#3B82F6] text-white'
+                                    ? v === 'lost' ? 'bg-red-600 text-white' : v === 'won' ? 'bg-green-600 text-white' : 'bg-primary text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                             >
@@ -347,10 +350,10 @@ export default function LeadsKanbanView({
                     <div className="flex gap-4 h-[calc(100vh-280px)] min-w-max">
                         {statusGroups.map((group) => (
                             <div key={group.id} className="w-80 flex-shrink-0 flex flex-col">
-                                <div className="rounded-t-xl bg-secondary px-5 py-3">
+                                <div className="rounded-t-xl bg-secondary border-b border-gray-200/50 px-5 py-3">
                                     <div className="flex items-center justify-between">
-                                        <h3 className="font-semibold text-white capitalize">{group.title}</h3>
-                                        <span className="rounded-full bg-white px-3 py-0.5 text-sm font-semibold text-secondary">
+                                        <h3 className="font-semibold text-secondary-foreground capitalize">{group.title}</h3>
+                                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                                             {group.count}
                                         </span>
                                     </div>
@@ -383,7 +386,7 @@ export default function LeadsKanbanView({
                                                 isUpdating={updatingId === lead._id}
                                                 onDragStart={() => { if (permissions?.update) setDraggingId(lead._id); }}
                                                 onView={() => onView?.(lead)}
-                                                onEdit={permissions?.update && !group.title.match(/^won$/i) ? () => onEdit?.(lead) : undefined}
+                                                onEdit={permissions?.update && !group.title?.match(/^won$/i) ? () => onEdit?.(lead) : undefined}
                                                 onMarkLost={permissions?.update ? () => markLost(lead._id) : undefined}
                                                 onMarkWon={permissions?.update ? () => markWon(lead._id) : undefined}
                                             />

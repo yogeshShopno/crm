@@ -45,6 +45,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import axios from "axios";
+import mockData from "@/data/mockData.json";
 import { baseUrl, getAuthToken } from "@/config";
 import moment from "moment";
 import Link from 'next/link';
@@ -168,10 +169,10 @@ export default function Dashboard() {
     else setGreeting("Good Evening");
   }, [token, authUser, rawPerms]);
 
-  // Redirect if no token
-  useEffect(() => {
-    if (!token) router.replace("/login");
-  }, [router, token]);
+  // Redirect if no token (Bypassed)
+  // useEffect(() => {
+  //   if (!token) router.replace("/login");
+  // }, [router, token]);
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -201,249 +202,106 @@ export default function Dashboard() {
   };
 
   const fetchLeadSummary = async () => {
-    if (!token) return;
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly ? baseUrl.myLeadCountSummary : baseUrl.leadCountSummary;
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: {
-          from: fromDate || undefined,
-          to: toDate || undefined,
-        }
-      });
-      setSummary(res.data.data);
-    } catch (err) {
-      console.error("Lead summary error:", err);
-    }
+    setSummary({
+      totalLeads: mockData.leads.length,
+      currentMonthLeads: mockData.leads.length,
+      totalRevenue: 50000,
+      totalCommission: 5000,
+      totalSettlement: 4000,
+      statusWiseCounts: mockData.statuses.map(s => ({
+        statusId: s._id,
+        statusName: s.name,
+        count: mockData.leads.filter(l => l.leadStatus === s._id).length
+      }))
+    });
   };
 
   const fetchLeadsBySource = async () => {
-    if (!token) return;
-    try {
-      const res = await axios.get(baseUrl.leadSources, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const colorPalette = [
-        "#3B82F6", // blue-500
-        "#10B981", // emerald-500
-        "#F59E0B", // amber-500
-        "#EF4444", // red-500
-        "#8B5CF6", // violet-500
-        "#EC4899", // pink-500
-        "#06B6D4", // cyan-500
-        "#84CC16", // lime-500
-        "#F97316", // orange-500
-        "#6366F1", // indigo-500
-      ];
-
-      const chartData = (res.data.data ?? []).map((item: any, idx: number) => ({
-        name: item.name,
-        value: item.count || 0,
-        fill: colorPalette[idx % colorPalette.length],
-      }));
-
-      setLeadsBySource(chartData);
-    } catch (err) {
-      console.error("Leads by source error:", err);
-    }
+    const colorPalette = [
+      "var(--primary)", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6",
+      "#EC4899", "#06B6D4", "#84CC16", "#F97316", "#6366F1",
+    ];
+    const chartData = mockData.sources.map((s, idx) => ({
+      name: s.name,
+      value: Math.floor(Math.random() * 50) + 1,
+      fill: colorPalette[idx % colorPalette.length],
+    }));
+    setLeadsBySource(chartData);
   };
 
   const fetchStaffPerformance = async () => {
-    if (!token) return;
-    try {
-      const res = await axios.get(baseUrl.getAllStaff, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const chartData = (res.data.data ?? []).map((staff: any) => ({
-        name: staff.fullName || "Unknown",
-        converted: staff.status?.toLowerCase() === "active" ? 1 : 0,
-        pending: staff.status?.toLowerCase() === "inactive" ? 1 : 0,
-        lost: 0,
-      }));
-      setStaffPerformance(chartData);
-    } catch (err) {
-      console.error("Staff performance error:", err);
-    }
+    const chartData = mockData.users.map(u => ({
+      name: u.fullName,
+      converted: Math.floor(Math.random() * 20),
+      pending: Math.floor(Math.random() * 15),
+      lost: Math.floor(Math.random() * 5),
+    }));
+    setStaffPerformance(chartData);
   };
 
   const fetchUpcomingFollowups = async (page: number) => {
-    if (!token) return;
     setUpcomingLoading(true);
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly ? baseUrl.leadUpcomingFollowupsMy : baseUrl.leadUpcomingFollowups;
-      const res = await axios.get(
-        `${url}?page=${page}&limit=${ITEMS_PER_PAGE}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      const { data, pagination } = res.data;
-      setUpcomingFollowups(data || []);
-      setUpcomingTotalPages(pagination?.totalPages || 1);
-      setUpcomingPage(pagination?.currentPage || 1);
-    } catch (err) {
-      console.error("Upcoming followups error:", err);
-      setUpcomingFollowups([]);
-    } finally {
-      setUpcomingLoading(false);
-    }
+    setUpcomingFollowups(mockData.leads.slice(0, 3));
+    setUpcomingTotalPages(1);
+    setUpcomingPage(1);
+    setUpcomingLoading(false);
   };
 
   const fetchDueFollowups = async (page: number) => {
-    if (!token) return;
     setDueLoading(true);
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly ? baseUrl.leadDueFollowupsMy : baseUrl.leadDueFollowups;
-      const res = await axios.get(
-        `${url}?page=${page}&limit=${ITEMS_PER_PAGE}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      const { data, pagination } = res.data;
-      setDueFollowups(data || []);
-      setDueTotalPages(pagination?.totalPages || 1);
-      setDuePage(pagination?.currentPage || 1);
-    } catch (err) {
-      console.error("Due followups error:", err);
-      setDueFollowups([]);
-    } finally {
-      setDueLoading(false);
-    }
+    setDueFollowups(mockData.leads.slice(0, 2));
+    setDueTotalPages(1);
+    setDuePage(1);
+    setDueLoading(false);
   };
 
   const fetchAllFollowups = async (page: number) => {
-    if (!token) return;
     setAllLoading(true);
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly ? baseUrl.leadAllFollowupsMy : baseUrl.leadAllFollowups;
-      const res = await axios.get(
-        `${url}?page=${page}&limit=${ITEMS_PER_PAGE}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      const { data, pagination } = res.data;
-      setAllFollowups(data || []);
-      setAllTotalPages(pagination?.totalPages || 1);
-      setAllPage(pagination?.currentPage || 1);
-    } catch (err) {
-      console.error("All followups error:", err);
-      setAllFollowups([]);
-    } finally {
-      setAllLoading(false);
-    }
+    setAllFollowups(mockData.leads.slice(0, 5));
+    setAllTotalPages(1);
+    setAllPage(1);
+    setAllLoading(false);
   };
 
   const fetchTodayTasks = async () => {
-    if (!token) return;
     setTasksLoading(true);
-    try {
-      const res = await axios.get(baseUrl.todayTasks, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setTodayTasks(res.data?.data || []);
-    } catch (err) {
-      console.error("Today tasks error:", err);
-      setTodayTasks([]);
-    } finally {
-      setTasksLoading(false);
-    }
+    setTodayTasks([]);
+    setTasksLoading(false);
   };
 
   const fetchRecentLeads = async () => {
-    if (!token) return;
     setLeadsLoading(true);
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly ? baseUrl.myLeads : baseUrl.getAllLeads;
-      const res = await axios.get(`${url}?page=1&limit=5`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setRecentLeads(res.data?.data || []);
-    } catch (err) {
-      console.error("Recent leads error:", err);
-      setRecentLeads([]);
-    } finally {
-      setLeadsLoading(false);
-    }
+    setRecentLeads(mockData.leads.slice(0, 5));
+    setLeadsLoading(false);
   };
 
   const fetchRecentSettlements = async () => {
-    if (!token || !user) return;
     setSettlementsLoading(true);
-    try {
-      const isMyOnly = !permissions.readAll && permissions.readOwn;
-      const url = isMyOnly 
-        ? `${baseUrl.settlementHistory}/${user._id}` 
-        : `${baseUrl.settlementHistory}/all`;
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      // the history endpoint returns an array in data.data or directly in data
-      // Limit to 5
-      const dataArray = res.data?.data || res.data || [];
-      setRecentSettlements(Array.isArray(dataArray) ? dataArray.slice(0, 5) : []);
-    } catch (err) {
-      console.error("Recent settlements error:", err);
-      setRecentSettlements([]);
-    } finally {
-      setSettlementsLoading(false);
-    }
+    setRecentSettlements([]);
+    setSettlementsLoading(false);
   };
 
   const fetchResellerPerformance = async () => {
-    if (!token) return;
     setPerformanceLoading(true);
-    try {
-      const params: any = {};
-      if (chartFilter !== 'All') {
-        params.filter = chartFilter.toLowerCase();
-      }
-      if (chartFromDate || chartToDate) {
-        if (chartFromDate) params.from = chartFromDate;
-        if (chartToDate) params.to = chartToDate;
-      } else {
-        if (fromDate) params.from = fromDate;
-        if (toDate) params.to = toDate;
-      }
-
-      const res = await axios.get(baseUrl.settlements, {
-        headers: { Authorization: `Bearer ${token}` },
-        params
-      });
-      setResellerPerformance(res.data?.data || []);
-    } catch (err) {
-      console.error("Reseller performance error:", err);
-      setResellerPerformance([]);
-    } finally {
-      setPerformanceLoading(false);
-    }
+    setResellerPerformance([]);
+    setPerformanceLoading(false);
   };
 
   useEffect(() => {
-    if (token) {
-      fetchLeadSummary();
-      fetchUpcomingFollowups(1);
-      fetchDueFollowups(1);
-      fetchAllFollowups(1);
-      fetchTodayTasks();
-      fetchRecentLeads();
-      fetchRecentSettlements();
+    // we bypass auth for now, so always fetch
+    fetchLeadSummary();
+    fetchUpcomingFollowups(1);
+    fetchDueFollowups(1);
+    fetchAllFollowups(1);
+    fetchTodayTasks();
+    fetchRecentLeads();
+    fetchRecentSettlements();
 
-      // Only fetch admin stats if they have readAll
-      if (permissions.readAll) {
-        fetchLeadsBySource();
-        fetchStaffPerformance();
-        fetchResellerPerformance();
-      }
-    }
-  }, [token, permissions, fromDate, toDate, user, chartFilter, chartFromDate, chartToDate]);
+    // Only fetch admin stats if they have readAll (or bypass)
+    fetchLeadsBySource();
+    fetchStaffPerformance();
+    fetchResellerPerformance();
+  }, [permissions, fromDate, toDate, user, chartFilter, chartFromDate, chartToDate]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = window.sessionStorage.getItem("kanbanVisibleStatusNames");
@@ -485,7 +343,7 @@ export default function Dashboard() {
         iconBg: "bg-blue-500/10",
         iconColor: "text-blue-500",
         type: "total",
-        fill: "#3B82F6",
+        fill: "var(--primary)",
         name: "Total Leads",
         description: "Leads in selected range"
       },

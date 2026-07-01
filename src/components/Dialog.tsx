@@ -53,19 +53,19 @@ export default function Dialog({
       {/* Sliding Dialog */}
       <div
         className={`
-          relative h-full w-full ${sizeClasses[size]} bg-white shadow-2xl flex flex-col
+          relative h-full w-full ${sizeClasses[size]} bg-background shadow-2xl flex flex-col
           transform transition-transform duration-300
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}
         `}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between bg-secondary px-6 py-4">
-          <h2 className="text-lg font-bold text-white">{title}</h2>
+        <div className="flex items-center justify-between bg-primary px-6 py-4">
+          <h2 className="text-lg font-bold text-primary-foreground">{title}</h2>
 
           <button
             onClick={onClose}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-1 focus:ring-white/50"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-primary-foreground transition-colors hover:bg-primary-hover focus:outline-none focus:ring-1 focus:ring-primary-foreground/50"
             aria-label="Close"
           >
             <FiX className="h-5 w-5" />
@@ -77,7 +77,7 @@ export default function Dialog({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4">
+          <div className="flex items-center justify-end gap-3 border-t border-border bg-secondary/30 px-6 py-4">
             {footer}
           </div>
         )}
@@ -125,7 +125,7 @@ export function CenterDialog({
 
       {/* Center Modal */}
       <div
-        className={`relative bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 transform transition-all duration-300
+        className={`relative bg-background rounded-xl shadow-2xl w-full max-w-lg mx-4 transform transition-all duration-300
           ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}
         `}
         onClick={(e) => e.stopPropagation()}

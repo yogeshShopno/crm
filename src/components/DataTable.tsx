@@ -170,21 +170,21 @@ export default function DataTable<T extends Record<string, any>>({
   }, [pagination, currentPage, data.length, totalRecords, onPageChange]);
 
   return (
-    <div className="rounded-md bg-white border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-2xl">
+    <div className="rounded-md bg-background border border-border overflow-hidden transition-all duration-300 hover:shadow-2xl">
       {/* Header - Premium Design */}
-      <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 border-b border-gray-200 px-3 py-3">
+      <div className="bg-gradient-to-r from-secondary/30 via-background to-secondary/30 border-b border-border px-3 py-3">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             {title && (
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+              <p className="text-sm text-foreground/70 mt-1">{subtitle}</p>
             )}
             {totalRecords > 0 && (
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-foreground/50 mt-2">
                 Showing {data.length} of {totalRecords} entries
               </p>
             )}
@@ -194,7 +194,7 @@ export default function DataTable<T extends Record<string, any>>({
             {onRefresh && (
               <button
                 onClick={onRefresh}
-                className="group relative inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2"
+                className="group relative inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground transition-all duration-200 hover:border-border hover:bg-secondary hover:shadow-md focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2"
               >
                 <FiRefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 duration-500" />
                 <span className="hidden sm:inline">Refresh</span>
@@ -213,13 +213,13 @@ export default function DataTable<T extends Record<string, any>>({
 
             {searchable && (
               <div className="relative w-full sm:w-auto">
-                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
+                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50 h-4 w-4 pointer-events-none" />
                 <input
                   type="search"
                   placeholder="Search anything..."
                   value={searchValue}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full sm:w-80 rounded-md border border-gray-200 bg-white pl-10 pr-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 transition-all duration-200 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-100 hover:border-gray-300"
+                  className="w-full sm:w-80 rounded-md border border-border bg-background pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-foreground/50 transition-all duration-200 focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/20 hover:border-foreground/30"
                 />
               </div>
             )}
@@ -235,7 +235,7 @@ export default function DataTable<T extends Record<string, any>>({
             {addButton && (
               <button
                 onClick={addButton.onClick}
-                className="inline-flex items-center gap-2 rounded-md bg-[#3B82F6] px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all duration-200 hover:bg-primary-hover hover:shadow-lg focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 active:scale-95"
               >
                 {addButton.icon || <span className="text-lg">+</span>}
                 {addButton.label}
@@ -246,15 +246,15 @@ export default function DataTable<T extends Record<string, any>>({
       </div>
 
       {/* Table - Modern Design */}
-      <div className="border-t border-gray-100 overflow-x-auto">
-        <table className="w-full divide-y divide-gray-100">
-          <thead className="bg-gray-100">
+      <div className="border-t border-border overflow-x-auto">
+        <table className="w-full divide-y divide-border">
+          <thead className="bg-secondary">
             <tr>
               {selectable && (
                 <th className="px-6 py-4 text-left w-12">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-border text-primary focus:ring-ring"
                     onChange={(e) => {
                       if (onSelectionChange) {
                         const allSelectableRows = data.filter(isRowSelectable);
@@ -272,20 +272,20 @@ export default function DataTable<T extends Record<string, any>>({
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 whitespace-nowrap ${column.className || ''}`}
+                  className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-foreground/80 whitespace-nowrap ${column.className || ''}`}
                 >
                   {column.label}
                 </th>
               ))}
               {actions && (onView || onEdit || onDelete || extraActions || expandableContent) && (
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 whitespace-nowrap">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-foreground/80 whitespace-nowrap">
                   Actions
                 </th>
               )}
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-50 bg-white">
+          <tbody className="divide-y divide-border bg-background">
             {loading ? (
               <tr>
                 <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-16 text-center">
@@ -323,17 +323,17 @@ export default function DataTable<T extends Record<string, any>>({
                     onMouseLeave={() => setHoveredRow(null)}
                     className={`
                       transition-all duration-200
-                      ${striped && index % 2 === 1 ? 'bg-gray-50/50' : 'bg-white'}
-                      ${hoveredRow === index ? 'bg-blue-50/30' : ''}
-                      ${!expandedRows[index] ? 'border-b border-gray-50 last:border-0' : 'border-b-0'}
-                      ${selectedRows.includes(row) ? 'bg-blue-50/50' : ''}
+                      ${striped && index % 2 === 1 ? 'bg-secondary/30' : 'bg-background'}
+                      ${hoveredRow === index ? 'bg-primary/5' : ''}
+                      ${!expandedRows[index] ? 'border-b border-border/50 last:border-0' : 'border-b-0'}
+                      ${selectedRows.includes(row) ? 'bg-primary/10' : ''}
                     `}
                   >
                     {selectable && (
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="h-4 w-4 rounded border-border text-primary focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={!isRowSelectable(row)}
                           checked={selectedRows.includes(row)}
                           onChange={(e) => {
@@ -351,7 +351,7 @@ export default function DataTable<T extends Record<string, any>>({
                     {columns.map((column) => (
                       <td
                         key={String(column.key)}
-                        className={`px-6 py-4 text-sm text-gray-700 whitespace-nowrap ${column.className || ''}`}
+                        className={`px-6 py-4 text-sm text-foreground whitespace-nowrap ${column.className || ''}`}
                       >
                         {renderCell(column, row)}
                       </td>
@@ -365,7 +365,7 @@ export default function DataTable<T extends Record<string, any>>({
                           {onView && (
                             <button
                               onClick={() => onView(row)}
-                              className="group h-9 w-9 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all duration-200 hover:bg-[#3B82F6] hover:text-white hover:shadow-md focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-2 active:scale-95"
+                              className="group h-9 w-9 flex items-center justify-center rounded-lg bg-secondary text-foreground transition-all duration-200 hover:bg-primary hover:text-primary-foreground hover:shadow-md focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 active:scale-95"
                             >
                               <FiEye className="h-4 w-4 group-hover:scale-110 transition-transform" />
                             </button>
@@ -506,7 +506,7 @@ export default function DataTable<T extends Record<string, any>>({
                       key={`page-${page}`}
                       onClick={() => onPageChange(page as number)}
                       className={`inline-flex min-w-[2.5rem] h-9 items-center justify-center rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 ${currentPage === page
-                        ? 'bg-[#3B82F6] text-white shadow-md'
+                        ? 'bg-primary text-white shadow-md'
                         : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm'
                         }`}
                     >

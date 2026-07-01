@@ -404,14 +404,14 @@ export default function LeadsPage() {
               <div className="hidden md:flex relative items-center bg-gray-100 p-1 rounded-md w-fit">
                 <button
                   onClick={() => switchView('list')}
-                  className={`relative z-10 cursor-pointer flex items-center justify-center w-10 h-10 rounded-md transition-colors ${viewMode === 'list' ? 'bg-[#3B82F6] text-white shadow-sm' : 'text-gray-700'}`}
+                  className={`relative z-10 cursor-pointer flex items-center justify-center w-10 h-10 rounded-md transition-colors ${viewMode === 'list' ? 'bg-primary text-white shadow-sm' : 'text-gray-700'}`}
                   title="List View"
                 >
                   <ListCollapse className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => switchView('kanban')}
-                  className={`relative z-10 cursor-pointer flex items-center justify-center w-10 h-10 rounded-md transition-colors ${viewMode === 'kanban' ? 'bg-[#3B82F6] text-white shadow-sm' : 'text-gray-700'}`}
+                  className={`relative z-10 cursor-pointer flex items-center justify-center w-10 h-10 rounded-md transition-colors ${viewMode === 'kanban' ? 'bg-primary text-white shadow-sm' : 'text-gray-700'}`}
                   title="Kanban View"
                 >
                   <Kanban className="h-5 w-5" />
@@ -423,7 +423,7 @@ export default function LeadsPage() {
             {canCreate && (
               <button
                 onClick={handleOpenAdd}
-                className="flex cursor-pointer items-center gap-2 rounded-md bg-[#3B82F6] px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg active:scale-95 transition-all"
+                className="flex cursor-pointer items-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg active:scale-95 transition-all"
               >
                 <Plus className="h-4 w-4" />
                 Add Lead

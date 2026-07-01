@@ -43,8 +43,8 @@ export default function LoginPage() {
         const { data: result } = await axios.post(`${baseUrl.userLogin}`, {
           email: values.email,
           password: values.password,
-        });
-
+        }); 
+        
         if (result.status === 'Success') {
           setAuthToken(result.token);
           
@@ -62,6 +62,7 @@ export default function LoginPage() {
 
           toast.success(result.message || 'Login successful');
           router.push('/');
+
         } else {
           toast.error(result.message || 'Login failed');
         }
@@ -82,31 +83,31 @@ export default function LoginPage() {
     <div className="relative min-h-screen flex items-center justify-center bg-white px-4 overflow-hidden">
       {/* Premium ambient background */}
       {/* <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -left-32 h-[420px] w-[420px] rounded-full bg-[#3B82F6]/15 blur-3xl"></div>
-        <div className="absolute -bottom-40 -right-32 h-[480px] w-[480px] rounded-full bg-[#3B82F6]/10 blur-3xl"></div>
+        <div className="absolute -top-32 -left-32 h-[420px] w-[420px] rounded-full bg-primary/15 blur-3xl"></div>
+        <div className="absolute -bottom-40 -right-32 h-[480px] w-[480px] rounded-full bg-primary/10 blur-3xl"></div>
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#3B82F60A_1px,transparent_1px),linear-gradient(to_bottom,#3B82F60A_1px,transparent_1px)] bg-[size:44px_44px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]"></div>
       </div> */}
 
       <div className="relative w-full max-w-md">
         {/* Glow ring */}
-        {/* <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-[#3B82F6] via-[#3B82F6]/40 to-transparent opacity-70 blur-[2px]"></div> */}
+        {/* <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-primary via-[#3B82F6]/40 to-transparent opacity-70 blur-[2px]"></div> */}
 
-        <div className="relative rounded-3xl bg-white p-9 border border-[#3B82F6]">
+        <div className="relative rounded-3xl bg-white p-9 border border-primary">
           {/* Header */}
           <div className="text-center mb-9">
             <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center">
-              <div className="absolute inset-0 rounded-2xl bg-[#3B82F6] rotate-6 shadow-lg shadow-blue-500/40"></div>
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1d4ed8] -rotate-3"></div>
+              <div className="absolute inset-0 rounded-2xl bg-primary rotate-6 shadow-lg shadow-blue-500/40"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary to-primary-hover -rotate-3"></div>
               <Lock className="relative h-7 w-7 text-white drop-shadow" />
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 mb-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#3B82F6] animate-pulse"></span>
-              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#3B82F6]">Reseller Panel</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Reseller Panel</span>
             </div>
 
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              Welcome <span className="text-[#3B82F6]">Back</span>
+              Welcome <span className="text-primary">Back</span>
             </h1>
             <p className="mt-2 text-sm text-gray-500">Access your reseller dashboard & manage clients</p>
           </div>
@@ -119,7 +120,7 @@ export default function LoginPage() {
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-[#3B82F6] transition-colors" />
+                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
                 </div>
                 <input
                   type="email"
@@ -129,7 +130,7 @@ export default function LoginPage() {
                   onBlur={formik.handleBlur}
                   className={`w-full rounded-xl border py-3.5 pl-11 pr-4 text-gray-900 placeholder-gray-400 outline-none transition-all bg-gray-50/60 focus:bg-white ${formik.touched.email && formik.errors.email
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-[#3B82F6] focus:ring-blue-100'
+                    : 'border-gray-200 focus:border-primary focus:ring-blue-100'
                     } focus:ring-4`}
                   placeholder="reseller@company.com"
                 />
@@ -146,7 +147,7 @@ export default function LoginPage() {
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-[#3B82F6] transition-colors" />
+                  <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -157,13 +158,13 @@ export default function LoginPage() {
                   placeholder="••••••••••"
                   className={`w-full rounded-xl border py-3.5 pl-11 pr-12 text-gray-900 placeholder-gray-400 outline-none transition-all bg-gray-50/60 focus:bg-white ${formik.touched.password && formik.errors.password
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-[#3B82F6] focus:ring-blue-100'
+                    : 'border-gray-200 focus:border-primary focus:ring-blue-100'
                     } focus:ring-4`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-[#3B82F6] hover:bg-blue-50 transition-all focus:outline-none z-10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-primary hover:bg-blue-50 transition-all focus:outline-none z-10"
                   style={{ background: 'transparent', cursor: 'pointer' }}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -178,7 +179,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#1d4ed8] py-4 text-sm font-bold tracking-wider text-white shadow-lg shadow-blue-500/40 transition-all hover:shadow-xl hover:shadow-blue-500/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-primary to-primary-hover py-4 text-sm font-bold tracking-wider text-white shadow-lg shadow-blue-500/40 transition-all hover:shadow-xl hover:shadow-blue-500/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"></span>
               {loading ? (

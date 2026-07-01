@@ -67,8 +67,8 @@ const FormInput: React.FC<FormInputProps> = ({
   const getInputClasses = () => {
     let base = `
       w-full px-3 py-2.5 rounded-xl border
-      bg-white/90 backdrop-blur-sm
-      text-gray-800 text-sm outline-none transition-all duration-200
+      bg-background
+      text-foreground text-sm outline-none transition-all duration-200
     `;
 
     if (disabled) {
@@ -81,13 +81,13 @@ const FormInput: React.FC<FormInputProps> = ({
     if (isPassword) base += " pr-10";
 
     if (hasError) {
-      base += " border-red-500 ring-1 ring-red-500 focus:border-red-500 focus:ring-red-500/20";
+      base += " border-destructive ring-1 ring-destructive focus:border-destructive focus:ring-destructive/20";
     } else if (showSuccess) {
-      base += " border-green-500 ring-1 ring-red-500 focus:border-green-500 focus:ring-red-500";
+      base += " border-green-500 ring-1 ring-green-500 focus:border-green-500 focus:ring-green-500";
     } else if (isFocused) {
-      base += " border-blue-500 ring-1 ring-blue-500/20";
+      base += " border-ring ring-1 ring-ring/20";
     } else if (!disabled) {
-      base += " border-gray-300 hover:border-gray-400";
+      base += " border-border hover:border-gray-400";
     }
 
     return `${base} ${className}`;
@@ -96,12 +96,12 @@ const FormInput: React.FC<FormInputProps> = ({
   const getFileInputClasses = () => {
     let classes = `
       w-full px-3 py-2 rounded-xl border
-      bg-white/90 backdrop-blur-sm
+      bg-background
       text-sm outline-none transition-all duration-200
       file:mr-3 file:py-2 file:px-4 file:rounded-lg
       file:border-0 file:text-sm file:font-medium
-      file:bg-blue-50 file:text-blue-700
-      hover:file:bg-blue-100
+      file:bg-primary file:text-primary-foreground
+      hover:file:bg-primary-hover
     `;
 
     if (disabled) {
@@ -136,11 +136,11 @@ const FormInput: React.FC<FormInputProps> = ({
     }
 
     if (hasError) {
-      classes += ` border-red-500 focus:ring-red-500`;
+      classes += ` border-destructive focus:ring-destructive`;
     } else if (checked) {
-      classes += ` border-${checkboxColor} bg-${checkboxColor} focus:ring-${checkboxColor}`;
+      classes += ` border-primary bg-primary focus:ring-ring`;
     } else {
-      classes += ` border-gray-400 focus:ring-blue-300`;
+      classes += ` border-border focus:ring-ring`;
     }
 
     return classes;
@@ -177,8 +177,8 @@ const FormInput: React.FC<FormInputProps> = ({
               className={`w-5 h-5 rounded border flex items-center justify-center cursor-pointer ${checked ? "" : "border-gray-400"
                 }`}
               style={{
-                backgroundColor: checked ? checkboxColor : "transparent",
-                borderColor: checked ? checkboxColor : "#9CA3AF",
+                backgroundColor: checked ? 'var(--primary)' : "transparent",
+                borderColor: checked ? 'var(--primary)' : "var(--border)",
               }}
               onClick={() => {
                 if (!disabled) {

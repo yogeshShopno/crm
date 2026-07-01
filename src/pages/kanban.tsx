@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import mockData from "@/data/mockData.json";
 import {
   FiSearch,
   FiPhone,
@@ -159,21 +160,15 @@ export default function LeadsPage() {
 
   const fetchLeads = async () => {
     try {
-      const token = getAuthToken();
-      // Use kanban endpoint for initial organized data
-      const kanbanUrl = baseUrl.getAllLeads.replace(/\/?$/, '') + '/kanban';
-      const kanbanRes = await axios.get(kanbanUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const kanbanData = kanbanRes.data?.data || [];
+      const kanbanData = mockData.kanbanData;
       const initialLeads: ApiLead[] = kanbanData.flatMap((g: any) => g.leads || []);
-      setLeads(initialLeads);
+      setLeads(initialLeads as any);
 
       const initPages: Record<string, number> = {};
       const initHasMore: Record<string, boolean> = {};
       kanbanData.forEach((g: any) => {
         initPages[g.statusId] = 1;
-        initHasMore[g.statusId] = g.leads?.length === 10;
+        initHasMore[g.statusId] = false;
       });
       setPageMap(initPages);
       setHasMoreMap(initHasMore);
@@ -186,104 +181,34 @@ export default function LeadsPage() {
   };
 
   const loadMoreLeads = async (statusId: string) => {
-    if (loadingMoreMap[statusId] || !hasMoreMap[statusId]) return;
-    setLoadingMoreMap(prev => ({ ...prev, [statusId]: true }));
-    try {
-      const token = getAuthToken();
-      const nextPage = (pageMap[statusId] || 1) + 1;
-      const res = await axios.get(`${baseUrl.getAllLeads}?status=${statusId}&page=${nextPage}&limit=10`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = res.data?.data || [];
-      if (data.length > 0) {
-        setLeads(prev => {
-          const existingIds = new Set(prev.map(l => l._id));
-          const newUnique = data.filter((l: ApiLead) => !existingIds.has(l._id));
-          return [...prev, ...newUnique];
-        });
-        setPageMap(prev => ({ ...prev, [statusId]: nextPage }));
-        setHasMoreMap(prev => ({ ...prev, [statusId]: data.length === 10 }));
-      } else {
-        setHasMoreMap(prev => ({ ...prev, [statusId]: false }));
-      }
-    } catch (error) {
-      console.error("Failed to load more leads", error);
-    } finally {
-      setLoadingMoreMap(prev => ({ ...prev, [statusId]: false }));
-    }
+    // Mock data doesn't paginate
+    return;
   };
 
   const fetchLostLeads = async () => {
     setLoadingLost(true);
-    try {
-      const token = getAuthToken();
-      const res = await axios.get(baseUrl.getLostLeads, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLostLeadsList(res.data?.data || []);
-    } catch (error) {
-      console.error("Failed to fetch lost leads", error);
-      setLostLeadsList([]);
-    } finally {
-      setLoadingLost(false);
-    }
+    setLostLeadsList([]);
+    setLoadingLost(false);
   };
 
   const fetchWonLeads = async () => {
     setLoadingWon(true);
-    try {
-      const token = getAuthToken();
-      const res = await axios.get(baseUrl.getWonLeads, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setWonLeadsList(res.data?.data || []);
-    } catch (error) {
-      console.error("Failed to fetch won leads", error);
-      setWonLeadsList([]);
-    } finally {
-      setLoadingWon(false);
-    }
+    setWonLeadsList([]);
+    setLoadingWon(false);
   };
 
   const fetchSources = async () => {
-    try {
-      const token = getAuthToken();
-      const res = await axios.get(baseUrl.leadSources, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = res.data?.data ?? res.data;
-      setSources(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch sources", error);
-    }
+    setSources(mockData.sources);
   };
 
 
 
   const fetchStatuses = async () => {
-    try {
-      const token = getAuthToken();
-      const res = await axios.get(baseUrl.leadStatuses, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = res.data?.data ?? res.data;
-      setStatuses(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch statuses", error);
-    }
+    setStatuses(mockData.statuses);
   };
 
   const fetchStaff = async () => {
-    try {
-      const token = getAuthToken();
-      const res = await axios.get(baseUrl.getAllStaff, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = res.data?.data ?? res.data;
-      setStaffMembers(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch staff", error);
-    }
+    setStaffMembers(mockData.users);
   };
 
   useEffect(() => {
@@ -643,7 +568,7 @@ export default function LeadsPage() {
                         <h3 className="font-semibold text-white capitalize">
                           {status.title}
                         </h3>
-                        <span className="rounded-full bg-[#ffffff] px-3 py-1 text-sm font-medium text-[#3B82F6]">
+                        <span className="rounded-full bg-[#ffffff] px-3 py-1 text-sm font-medium text-primary">
                           {status.leads.length}
                         </span>
                       </div>

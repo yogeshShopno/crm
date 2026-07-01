@@ -50,15 +50,15 @@ export default function KanbanCard({
                 </div>
             )}
             <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                    <div className="font-semibold text-gray-900 truncate">{lead.customerName}</div>
+                <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-gray-900 truncate">{lead.fullName || lead.customerName || 'Unnamed Lead'}</div>
                     <div className="text-xs text-gray-500 truncate">{lead.companyName || '-'}</div>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                         onClick={onView}
                         title="View"
-                        className="h-7 w-7 cursor-pointer rounded-full bg-blue-500 text-white flex items-center justify-center hover:-translate-y-0.5 hover:shadow transition-all"
+                        className="h-7 w-7 cursor-pointer rounded-full bg-primary text-white flex items-center justify-center hover:-translate-y-0.5 hover:shadow transition-all"
                     >
                         <FiEye className="h-3.5 w-3.5" />
                     </button>
@@ -77,11 +77,11 @@ export default function KanbanCard({
             <div className="mt-2 space-y-1.5 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                     <FiPhone className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">{formatContactNumber(lead.customerContact)}</span>
+                    <span className="truncate">{formatContactNumber(lead.contact || lead.customerContact) || '-'}</span>
                 </div>
                 <div className="flex items-center gap-2 min-w-0">
                     <FiMail className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="truncate">{lead.customerEmail}</span>
+                    <span className="truncate">{lead.email || lead.customerEmail || '-'}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
         
