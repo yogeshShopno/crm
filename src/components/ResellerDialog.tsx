@@ -22,6 +22,7 @@ interface Reseller {
   status: string;
   profileImage?: string;
   commissionRate?: string;
+  department?: string;
 }
 
 interface ResellerDialogProps {
@@ -88,6 +89,7 @@ export default function ResellerDialog({
   const [error, setError] = useState<string | null>(null);
   const [roles, setRoles] = useState<{ _id: string; roleName: string }[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [departments, setDepartments] = useState<{ _id: string; name: string }[]>([]);
 
   const isUpdate = !!initialData?._id;
 
@@ -107,6 +109,7 @@ export default function ResellerDialog({
       role: '',
       status: 'active',
       commissionRate: '',
+      department: '',
     },
     validationSchema: isUpdate ? updateValidationSchema : createValidationSchema,
     validateOnChange: false,
@@ -139,6 +142,7 @@ export default function ResellerDialog({
         role: initialData.role || '',
         status: initialData.status || 'active',
         commissionRate: (initialData as any).commissionRate || '',
+        department: typeof (initialData as any).department === 'object' ? (initialData as any).department?._id || '' : (initialData as any).department || '',
       });
 
       if (initialData.profileImage) {
@@ -172,6 +176,12 @@ export default function ResellerDialog({
         }
       })
       .catch(() => setRoles([]));
+
+    axios.get('/api/department', { headers })
+      .then((res) => {
+        setDepartments(res.data?.data || []);
+      })
+      .catch(() => setDepartments([]));
   }, [isOpen, initialData]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,31 +208,53 @@ export default function ResellerDialog({
     setError(null);
 
     try {
-      const payload = new FormData();
-      payload.append('fullName', values.fullName);
-      payload.append('email', values.email);
-      payload.append('phone', values.phone);
-      if (values.role) {
-        payload.append('role', values.role);
-      }
-      payload.append('status', values.status);
-      payload.append('commissionRate', values.commissionRate);
-
-      if (values.password.trim()) {
-        payload.append('password', values.password);
-      }
-
-      if (selectedFile) {
-        payload.append('profileImage', selectedFile);
-      }
-
-      const headers = {
+      const headers: any = {
         Authorization: `Bearer ${token || getAuthToken()}`
       };
 
-      const response = isUpdate
-        ? await axios.put(`${baseUrl.updateReseller}/${initialData?._id}`, payload, { headers })
-        : await axios.post(baseUrl.addReseller, payload, { headers });
+      let response;
+      if (baseUrl.addReseller.includes('/api/')) {
+        headers['Content-Type'] = 'application/json';
+        const jsonPayload = {
+          fullName: values.fullName,
+          email: values.email,
+          phone: values.phone,
+          role: values.role,
+          status: values.status,
+          commissionRate: values.commissionRate,
+          department: values.department,
+          password: values.password?.trim() ? values.password : undefined,
+          profileImage: previewImage ? previewImage.split('/').pop() : undefined,
+        };
+        response = isUpdate
+          ? await axios.put(`${baseUrl.updateReseller}/${initialData?._id}`, jsonPayload, { headers })
+          : await axios.post(baseUrl.addReseller, jsonPayload, { headers });
+      } else {
+        const payload = new FormData();
+        payload.append('fullName', values.fullName);
+        payload.append('email', values.email);
+        payload.append('phone', values.phone);
+        if (values.role) {
+          payload.append('role', values.role);
+        }
+        payload.append('status', values.status);
+        payload.append('commissionRate', values.commissionRate);
+        if (values.department) {
+          payload.append('department', values.department);
+        }
+
+        if (values.password.trim()) {
+          payload.append('password', values.password);
+        }
+
+        if (selectedFile) {
+          payload.append('profileImage', selectedFile);
+        }
+
+        response = isUpdate
+          ? await axios.put(`${baseUrl.updateReseller}/${initialData?._id}`, payload, { headers })
+          : await axios.post(baseUrl.addReseller, payload, { headers });
+      }
 
       parentOnSubmit?.(response.data);
       toast.success(isUpdate ? 'Reseller updated successfully' : 'Reseller created successfully');
@@ -254,7 +286,7 @@ export default function ResellerDialog({
           <button
             type="submit"
             form="reseller-form"
-            className="px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-6 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             disabled={loading}
           >
             {loading ? 'Saving...' : isUpdate ? 'Update Reseller' : '+ Add Reseller'}
@@ -275,8 +307,8 @@ export default function ResellerDialog({
 
             {/* PERSONAL INFORMATION CARD */}
             <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-primary"></span>
                 PERSONAL INFORMATION
               </div>
 
@@ -336,7 +368,7 @@ export default function ResellerDialog({
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-[38px] text-xs font-semibold text-blue-600 hover:text-blue-800"
+                    className="absolute right-3 top-[38px] text-xs font-semibold text-primary hover:text-primary"
                   >
                     {/* {showPassword ? 'Hide' : 'Show'} */}
                   </button>
@@ -364,6 +396,18 @@ export default function ResellerDialog({
                   placeholder="e.g. 10"
                 />
 
+                <div className="md:col-span-1">
+                  <FormSelect
+                    label="Department"
+                    name="department"
+                    value={formik.values.department}
+                    onChange={(val) => formik.setFieldValue('department', val)}
+                    options={departments.map((d) => ({ value: d._id, label: d.name }))}
+                    error={formik.touched.department && formik.errors.department ? formik.errors.department : undefined}
+                    placeholder="Select Department"
+                  />
+                </div>
+
                 {/* <div className="md:col-span-2">
                   <FormSelect
                     label="Role"
@@ -386,8 +430,8 @@ export default function ResellerDialog({
 
             {/* PROFILE IMAGE CARD */}
             <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-primary"></span>
                 PROFILE IMAGE
               </div>
 
@@ -408,7 +452,7 @@ export default function ResellerDialog({
 
                 <label
                   htmlFor="profile-image-upload"
-                  className="px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 font-medium text-sm hover:bg-blue-100 cursor-pointer transition-colors text-center inline-flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary font-medium text-sm hover:bg-primary/10 cursor-pointer transition-colors text-center inline-flex items-center gap-1.5"
                 >
                   <FiCamera className="w-4 h-4" />
                   Upload Image
@@ -425,8 +469,8 @@ export default function ResellerDialog({
 
             {/* SETTINGS CARD */}
             <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-primary"></span>
                 SETTINGS
               </div>
 
@@ -443,7 +487,7 @@ export default function ResellerDialog({
                           formik.values.status === 'active' ? 'inactive' : 'active'
                         )
                       }
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formik.values.status === 'active' ? 'bg-blue-600' : 'bg-gray-200'
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formik.values.status === 'active' ? 'bg-primary' : 'bg-gray-200'
                         }`}
                     >
                       <span

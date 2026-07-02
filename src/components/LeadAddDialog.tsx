@@ -64,6 +64,7 @@ export default function LeadAddDialog({
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [requiredFields, setRequiredFields] = useState<string[]>([]);
 
   const token = typeof window !== 'undefined' ? getAuthToken() : null;
 
@@ -86,6 +87,26 @@ export default function LeadAddDialog({
   const [attachmentsFiles, setAttachmentsFiles] = useState<File[]>([]);
   const [existingAttachments, setExistingAttachments] = useState<{ name: string; url?: string }[]>([]);
 
+  const isFieldRequired = (fieldName: string) => {
+    const fieldMapping: Record<string, string> = {
+      fullName: 'customerName',
+      companyName: 'companyName',
+      address: 'address',
+      contact: 'customerContact',
+      email: 'customerEmail',
+      leadSource: 'leadSource',
+      leadStatus: 'leadStatus',
+      assignedTo: 'assignedTo'
+    };
+    const settingsKey = fieldMapping[fieldName];
+    if (fieldName === 'contact') return true; // Always mandatory
+    if (requiredFields.length > 0) {
+      return requiredFields.includes(settingsKey);
+    }
+    const defaults = ['customerName', 'customerContact', 'leadSource', 'leadStatus'];
+    return defaults.includes(settingsKey);
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -95,15 +116,29 @@ export default function LeadAddDialog({
         setLoading(true);
         setFormError(null);
 
-        const [sourcesRes, statusRes, staffRes] = await Promise.all([
+        const [sourcesRes, statusRes, staffRes, settingsRes] = await Promise.all([
           axios.get(baseUrl.leadSources, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(baseUrl.leadStatuses, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(baseUrl.getAllStaff, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(baseUrl.settingsRequiredFields, { headers: { Authorization: `Bearer ${token}` } }).catch(() => null),
         ]);
 
         setLeadSources(sourcesRes.data?.data || []);
         setLeadStatuses(statusRes.data?.data || []);
         setStaffList(staffRes.data?.data || []);
+
+        if (settingsRes) {
+          const reqs = settingsRes.data?.data?.requiredLeads || [];
+          setRequiredFields(reqs);
+          if (typeof window !== 'undefined') {
+            window.sessionStorage.setItem('leadRequiredFields', JSON.stringify(reqs));
+          }
+        } else if (typeof window !== 'undefined') {
+          const saved = window.sessionStorage.getItem('leadRequiredFields');
+          if (saved) {
+            try { setRequiredFields(JSON.parse(saved)); } catch {}
+          }
+        }
 
       } catch (err) {
         console.error(err);
@@ -179,15 +214,25 @@ export default function LeadAddDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.fullName.trim()) return setFormError('Full Name is required');
-    if (!formData.companyName.trim()) return setFormError('Company Name is required');
-    if (!formData.address.trim()) return setFormError('Address is required');
-    if (!formData.contact.trim()) return setFormError('Phone is required');
-    if (!formData.email.trim()) return setFormError('Email is required');
-    if (!formData.leadSource) return setFormError('Please select Source');
-    if (!formData.leadStatus) return setFormError('Please select Status');
-    if (!formData.assignedTo) return setFormError('Please assign Staff');
+    if (isFieldRequired('fullName') && !formData.fullName.trim()) return setFormError('Full Name is required');
+    if (isFieldRequired('companyName') && !formData.companyName.trim()) return setFormError('Company Name is required');
+    if (isFieldRequired('address') && !formData.address.trim()) return setFormError('Address is required');
+    if (isFieldRequired('contact') && !formData.contact.trim()) return setFormError('Phone is required');
+    if (isFieldRequired('email') && !formData.email.trim()) return setFormError('Email is required');
+    if (isFieldRequired('leadSource') && !formData.leadSource) return setFormError('Please select Source');
+    if (isFieldRequired('leadStatus') && !formData.leadStatus) return setFormError('Please select Status');
+    if (isFieldRequired('assignedTo') && !formData.assignedTo) return setFormError('Please assign Staff');
     if (!token) return setFormError('No authentication token found');
+
+    // Email format validation
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      return setFormError('Please enter a valid email address');
+    }
+
+    // Phone format validation
+    if (formData.contact.trim() && !/^\+?[0-9\s-]{8,20}$/.test(formData.contact.trim())) {
+      return setFormError('Please enter a valid phone number (8-20 digits)');
+    }
 
     try {
       setSubmitting(true);
@@ -281,7 +326,7 @@ export default function LeadAddDialog({
             type="submit"
             form="lead-form"
             disabled={submitting || loading}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 min-w-[80px]"
+            className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 min-w-[80px]"
           >
             {submitting ? 'Saving...' : 'Save'}
           </button>
@@ -299,36 +344,36 @@ export default function LeadAddDialog({
           )}
 
           <div>
-            <Label required>Full Name</Label>
+            <Label required={isFieldRequired('fullName')}>Full Name</Label>
             <input
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              required
+              required={isFieldRequired('fullName')}
               className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               placeholder="Enter Full Name"
             />
           </div>
 
           <div>
-            <Label required>Company Name</Label>
+            <Label required={isFieldRequired('companyName')}>Company Name</Label>
             <input
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
-              required
+              required={isFieldRequired('companyName')}
               className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               placeholder="Enter Company Name"
             />
           </div>
 
           <div>
-            <Label required>Address</Label>
+            <Label required={isFieldRequired('address')}>Address</Label>
             <textarea
               name="address"
               value={formData.address}
               onChange={handleChange}
-              required
+              required={isFieldRequired('address')}
               rows={3}
               className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               placeholder="Enter Address"
@@ -343,19 +388,19 @@ export default function LeadAddDialog({
               isPhone={true}
               value={formData.contact}
               onChange={handleChange}
-              required
+              required={isFieldRequired('contact')}
               placeholder="00000 00000"
             />
           </div>
 
           <div>
-            <Label required>Email</Label>
+            <Label required={isFieldRequired('email')}>Email</Label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              required={isFieldRequired('email')}
               className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               placeholder="Enter Email Address"
             />
@@ -363,12 +408,12 @@ export default function LeadAddDialog({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label required>Source</Label>
+              <Label required={isFieldRequired('leadSource')}>Source</Label>
               <select
                 name="leadSource"
                 value={formData.leadSource}
                 onChange={handleChange}
-                required
+                required={isFieldRequired('leadSource')}
                 className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               >
                 <option value="">— Select —</option>
@@ -381,12 +426,12 @@ export default function LeadAddDialog({
             </div>
 
             <div>
-              <Label required>Status</Label>
+              <Label required={isFieldRequired('leadStatus')}>Status</Label>
               <select
                 name="leadStatus"
                 value={formData.leadStatus}
                 onChange={handleChange}
-                required
+                required={isFieldRequired('leadStatus')}
                 className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               >
                 <option value="">— Select —</option>
@@ -399,12 +444,12 @@ export default function LeadAddDialog({
             </div>
 
             <div>
-              <Label required>Assigned To</Label>
+              <Label required={isFieldRequired('assignedTo')}>Assigned To</Label>
               <select
                 name="assignedTo"
                 value={formData.assignedTo}
                 onChange={handleChange}
-                required
+                required={isFieldRequired('assignedTo')}
                 className="w-full border border-slate-400 rounded px-3 py-2 text-black"
               >
                 <option value="">— Select —</option>
@@ -490,7 +535,7 @@ export default function LeadAddDialog({
                             href={a.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-blue-600 hover:underline"
+                            className="text-primary hover:underline"
                           >
                             View
                           </a>
@@ -519,7 +564,7 @@ export default function LeadAddDialog({
                   id="isActive"
                   checked={formData.isActive}
                   onChange={handleChange}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-ring"
                 />
                 <label htmlFor="isActive" className="text-sm font-medium text-slate-700">
                   Is Active Lead

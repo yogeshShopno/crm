@@ -519,7 +519,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
                   {notificationPermission !== 'granted' && (
                     <button
                       // onClick={requestNotificationPermission}
-                      className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer bg-blue-50 px-2 py-1 rounded"
+                      className="text-xs text-primary hover:text-primary cursor-pointer bg-primary/5 px-2 py-1 rounded"
                     >
                       {notificationPermission === 'denied' ? 'Enable Notifications' : 'Allow Notifications'}
                     </button>
@@ -547,7 +547,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
                       <div
                         key={notif._id}
                         onClick={() => handleNotificationClick(notif)}
-                        className="px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors bg-blue-50/30 group relative"
+                        className="px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors bg-primary/5/30 group relative"
                       >
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="text-sm font-semibold text-gray-900 pr-6">
@@ -563,7 +563,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
                         <button
                           onClick={(e) => markAsReadSingle(e, notif._id)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-blue-500 hover:text-blue-700 bg-white shadow-sm rounded-full p-1 transition-all"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-primary hover:text-primary bg-white shadow-sm rounded-full p-1 transition-all"
                           title="Mark as read"
                         >
                           <CheckCircle className="w-4 h-4" />

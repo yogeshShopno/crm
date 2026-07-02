@@ -104,8 +104,7 @@ export default function SalesExecutiveForm({
       image: undefined as string | undefined,
     },
     validationSchema: getValidationSchema(isUpdate),
-    validateOnChange: true,
-    validateOnBlur: true,
+
     onSubmit: async (values) => {
       await handleSubmit(values);
     },
@@ -264,7 +263,7 @@ export default function SalesExecutiveForm({
           <button
             type="submit"
             form="sales-executive-form"
-            className="px-4 py-2 cursor-pointer rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 cursor-pointer rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || !formik.isValid}
           >
             {loading ? 'Saving...' : isUpdate ? 'Update' : 'Add'}
@@ -297,7 +296,7 @@ export default function SalesExecutiveForm({
             </div>
             <label
               htmlFor="profile-image"
-              className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-blue-600 p-1.5 text-white shadow-lg hover:bg-blue-700 transition-colors"
+              className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary p-1.5 text-white shadow-lg hover:bg-primary/90 transition-colors"
             >
               <FiCamera className="h-4 w-4" />
               <input

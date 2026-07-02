@@ -133,6 +133,29 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const collectionKey = getCollectionKey(mainType);
 
   if (method === 'GET') {
+    if (mainType === 'settings') {
+      if (subType === 'lead-fields') {
+        const fields = [
+          { id: 'customerName', label: 'Full Name' },
+          { id: 'companyName', label: 'Company Name' },
+          { id: 'address', label: 'Address' },
+          { id: 'customerContact', label: 'Phone' },
+          { id: 'customerEmail', label: 'Email' },
+          { id: 'leadSource', label: 'Source' },
+          { id: 'leadStatus', label: 'Status' },
+          { id: 'assignedTo', label: 'Assign Staff' }
+        ];
+        return res.status(200).json({ data: fields });
+      }
+      if (subType === 'required-fields') {
+        return res.status(200).json({
+          data: {
+            requiredLeads: db.requiredLeads || ['customerName', 'customerContact', 'leadSource', 'leadStatus'],
+            requiredTasks: db.requiredTasks || ['subject', 'status', 'priority']
+          }
+        });
+      }
+    }
     // Lead Counts & Summaries
     if (mainType === 'lead' && subType === 'count-summary') {
       return res.status(200).json({
@@ -169,6 +192,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Default collection fetches
     if (collectionKey && db[collectionKey]) {
+      if (subType) {
+        const item = db[collectionKey].find((x: any) => x._id === subType || x.id === subType);
+        if (item) {
+          return res.status(200).json({ data: item });
+        }
+        return res.status(404).json({ message: 'Not found' });
+      }
       return res.status(200).json({ data: db[collectionKey], pagination: { totalPages: 1, currentPage: 1 } });
     }
 
@@ -190,11 +220,33 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const match = db.users.find((u: any) => u._id === resolved.assignedTo);
       if (match) resolved.assignedTo = { _id: match._id, fullName: match.fullName, avatar: match.avatar };
     }
+    if (resolved.department && typeof resolved.department === 'string') {
+      const match = (db.departments || []).find((d: any) => d._id === resolved.department);
+      if (match) resolved.department = match;
+    }
+    if (resolved.role && typeof resolved.role === 'string') {
+      const match = (db.roles || []).find((r: any) => r._id === resolved.role);
+      if (match) resolved.role = match;
+    }
     return resolved;
   };
 
   if (method === 'POST') {
+    if (mainType === 'settings' && subType === 'required-fields') {
+      db.requiredLeads = req.body.requiredLeads || [];
+      db.requiredTasks = req.body.requiredTasks || [];
+      writeDB(db);
+      return res.status(200).json({ message: 'Settings saved successfully' });
+    }
     if (collectionKey && db[collectionKey]) {
+      if (['statuses', 'sources', 'taskstatuses'].includes(collectionKey)) {
+        const nameLower = (req.body.name || '').trim().toLowerCase();
+        const exists = db[collectionKey].some((item: any) => (item.name || '').trim().toLowerCase() === nameLower);
+        if (exists) {
+          const typeName = collectionKey === 'statuses' ? 'Status' : (collectionKey === 'sources' ? 'Source' : 'Task Status');
+          return res.status(400).json({ message: `${typeName} name already exists` });
+        }
+      }
       const resolvedBody = resolveRelations(req.body);
       const newItem = {
         _id: generateId(),
@@ -215,6 +267,17 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const index = db[collectionKey].findIndex((item: any) => item._id === id || item.id === id);
       
       if (index !== -1) {
+        if (['statuses', 'sources', 'taskstatuses'].includes(collectionKey)) {
+          const nameLower = (req.body.name || '').trim().toLowerCase();
+          const exists = db[collectionKey].some((item: any) => 
+            (item._id !== id && item.id !== id) && 
+            (item.name || '').trim().toLowerCase() === nameLower
+          );
+          if (exists) {
+            const typeName = collectionKey === 'statuses' ? 'Status' : (collectionKey === 'sources' ? 'Source' : 'Task Status');
+            return res.status(400).json({ message: `${typeName} name already exists` });
+          }
+        }
         const resolvedBody = resolveRelations(req.body);
         db[collectionKey][index] = { ...db[collectionKey][index], ...resolvedBody };
         writeDB(db);

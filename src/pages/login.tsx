@@ -101,7 +101,7 @@ export default function LoginPage() {
               <Lock className="relative h-7 w-7 text-white drop-shadow" />
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-3 py-1 mb-3">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
               <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Reseller Panel</span>
             </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-primary hover:bg-blue-50 transition-all focus:outline-none z-10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-primary hover:bg-primary/5 transition-all focus:outline-none z-10"
                   style={{ background: 'transparent', cursor: 'pointer' }}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}

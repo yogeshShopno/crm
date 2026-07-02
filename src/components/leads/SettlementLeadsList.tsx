@@ -205,19 +205,19 @@ export default function SettlementLeadsList({ resellerId }: SettlementLeadsListP
       </div>
 
       {selectedLeads.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 flex items-center justify-between shadow-sm">
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4 flex items-center justify-between shadow-sm">
           <div>
-            <h3 className="text-blue-800 font-semibold text-sm">
+            <h3 className="text-primary font-semibold text-sm">
               {selectedLeads.length} Lead{selectedLeads.length > 1 ? 's' : ''} Selected
             </h3>
-            <p className="text-blue-600 text-xs mt-1">
+            <p className="text-primary text-xs mt-1">
               Total Commission: <span className="font-bold text-sm">₹{totalSettlementAmount.toLocaleString('en-IN')}</span>
             </p>
           </div>
           <button
             onClick={handleSettleLeads}
             disabled={settling}
-            className="px-4 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded shadow hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="px-4 py-1.5 bg-primary text-white text-sm font-semibold rounded shadow hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {settling ? 'Processing...' : 'Settle Leads'}
           </button>

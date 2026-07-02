@@ -336,18 +336,18 @@ export default function LeadBulkImportDialog({ isOpen, onClose, onImported }: Pr
             <div className="p-6 space-y-5 overflow-y-auto max-h-[80vh]">
 
               {/* Step 1 – Download Template */}
-              <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 space-y-3">
+              <div className="rounded-xl border border-primary/10 bg-primary/5 p-4 space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">1</span>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white text-xs font-bold">1</span>
                   <h3 className="font-semibold text-blue-900">Download Template</h3>
                 </div>
-                <p className="text-sm text-blue-700 leading-relaxed">
+                <p className="text-sm text-primary leading-relaxed">
                   Download the official import template. It includes <strong>dropdowns</strong> for{' '}
                   <em>Lead Status</em> and <em>Priority</em> pre-filled from your master data.
                 </p>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {['Full Name *', 'Contact *', 'Company Name *', 'Lead Status * (dropdown)', 'Email', 'Priority (dropdown)', 'Note'].map((f) => (
-                    <div key={f} className="flex items-center gap-1 rounded-full bg-white border border-blue-200 px-3 py-1 text-blue-700">
+                    <div key={f} className="flex items-center gap-1 rounded-full bg-white border border-primary/20 px-3 py-1 text-primary">
                       <ChevronRight className="h-3 w-3" /> {f}
                     </div>
                   ))}
@@ -355,7 +355,7 @@ export default function LeadBulkImportDialog({ isOpen, onClose, onImported }: Pr
                 <button
                   onClick={handleDownloadTemplate}
                   disabled={downloadingTemplate}
-                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {downloadingTemplate ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
                   {downloadingTemplate ? 'Downloading...' : 'Download Template (.xlsx)'}

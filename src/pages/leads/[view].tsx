@@ -481,7 +481,7 @@ export default function LeadsPage() {
               </button>
               <button
                 onClick={() => setShowFilterDrawer(false)}
-                className="px-4 py-1.5 text-xs font-bold text-secondary bg-blue-50 hover:bg-blue-100 rounded-md transition-all cursor-pointer"
+                className="px-4 py-1.5 text-xs font-bold text-secondary bg-primary/5 hover:bg-primary/10 rounded-md transition-all cursor-pointer"
               >
                 Collapse
               </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Dialog from '@/components/Dialog';
@@ -33,21 +33,6 @@ type LeadItem = {
   order: number;
 };
 
-// Validation schema
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required('Name is required')
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be at most 100 characters')
-    .matches(/^[a-zA-Z0-9\s&-]+$/, 'Name can only contain letters, numbers, spaces, &, and -'),
-  
-  order: Yup.number()
-    .required('Order is required')
-    .integer('Order must be a whole number')
-    .min(1, 'Order must be at least 1')
-    .max(9999, 'Order must be at most 9999'),
-});
-
 /* ================= CONTENT ================= */
 
 export function LeadSourcesContent() {
@@ -64,6 +49,29 @@ export function LeadSourcesContent() {
 
   const token = typeof window !== 'undefined' ? getAuthToken() : null;
   const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+
+  // Validation schema
+  const validationSchema = useMemo(() => Yup.object({
+    name: Yup.string()
+      .required('Name is required')
+      .min(2, 'Name must be at least 2 characters')
+      .max(100, 'Name must be at most 100 characters')
+      .matches(/^[a-zA-Z0-9\s&-]+$/, 'Name can only contain letters, numbers, spaces, &, and -')
+      .test('unique-name', 'Source name already exists', function (value) {
+        if (!value) return true;
+        const normalized = value.trim().toLowerCase();
+        return !allData.some(item => 
+          item.name.trim().toLowerCase() === normalized && 
+          item._id !== this.parent._id
+        );
+      }),
+    
+    order: Yup.number()
+      .required('Order is required')
+      .integer('Order must be a whole number')
+      .min(1, 'Order must be at least 1')
+      .max(9999, 'Order must be at most 9999'),
+  }), [allData]);
 
   // Initialize formik
   const formik = useFormik({
@@ -301,7 +309,7 @@ export function LeadSourcesContent() {
             <button
               type="submit"
               form="lead-source-form"
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
               {isSubmitting 

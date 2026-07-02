@@ -118,11 +118,11 @@ export function FieldSettingsContent() {
                 <label
                   key={field.id}
                   className={`flex items-center justify-between p-3 rounded-lg border transition-all ${isContact || isPayment ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'} ${isChecked
-                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    ? 'bg-primary/5 border-primary/20 text-primary'
                     : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
                     }`}
                 >
-                  <span className="font-medium">{field.label} {(isContact || isPayment) && <span className="text-xs ml-2 text-blue-600">(Mandatory)</span>}</span>
+                  <span className="font-medium">{field.label} {(isContact || isPayment) && <span className="text-xs ml-2 text-primary">(Mandatory)</span>}</span>
                   <input
                     type="checkbox"
                     className="hidden"
@@ -131,7 +131,7 @@ export function FieldSettingsContent() {
                     onChange={() => handleToggleLead(field.id)}
                   />
                   {isChecked ? (
-                    <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                   ) : (
                     <Circle className="h-5 w-5 text-gray-300" />
                   )}

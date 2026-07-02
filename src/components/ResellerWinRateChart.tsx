@@ -120,7 +120,7 @@ export default function ResellerWinRateChart({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
         <div className="flex items-center gap-4">
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Reseller — Win Rate</h2>
-          <span className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold">
+          <span className="bg-primary/5 text-primary px-4 py-1.5 rounded-full text-sm font-bold">
             {totalLeads} Total Leads
           </span>
         </div>
@@ -158,7 +158,7 @@ export default function ResellerWinRateChart({
                 }}
                 className={`px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200 ${
                   timeFilter === filter
-                    ? 'bg-blue-600 text-white shadow-md'
+                    ? 'bg-primary text-white shadow-md'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >

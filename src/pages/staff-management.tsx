@@ -205,7 +205,7 @@ export function StaffManagementContent() {
         <div className="flex flex-wrap gap-1">
           {(value as string[])?.length > 0
             ? (value as string[]).map((name) => (
-                <span key={name} className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                <span key={name} className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   {name}
                 </span>
               ))

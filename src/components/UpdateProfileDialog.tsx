@@ -171,7 +171,7 @@ export default function UpdateProfileDialog({
             type="submit"
             form="update-profile-form"
             disabled={loading}
-            className="px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-6 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? 'Saving...' : 'Save Changes'}
           </button>
@@ -187,8 +187,8 @@ export default function UpdateProfileDialog({
         )}
 
         <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-primary"></span>
             PROFILE IMAGE
           </div>
           <div className="flex flex-col items-center gap-4">
@@ -203,7 +203,7 @@ export default function UpdateProfileDialog({
             </div>
             <label
               htmlFor="update-profile-image-upload"
-              className="px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 font-medium text-sm hover:bg-blue-100 cursor-pointer transition-colors text-center inline-flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary font-medium text-sm hover:bg-primary/10 cursor-pointer transition-colors text-center inline-flex items-center gap-1.5"
             >
               <FiCamera className="w-4 h-4" />
               {selectedFile ? 'Change Photo' : 'Upload Photo'}
@@ -220,8 +220,8 @@ export default function UpdateProfileDialog({
         </div>
 
         <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-primary"></span>
             PERSONAL INFORMATION
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -268,8 +268,8 @@ export default function UpdateProfileDialog({
         </div>
 
         <div className="border border-gray-100 rounded-xl bg-white p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-blue-600 font-semibold text-sm uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+          <div className="flex items-center gap-2 pb-2 border-b border-gray-50 text-primary font-semibold text-sm uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-primary"></span>
             CHANGE PASSWORD
             <span className="text-gray-400 font-normal normal-case tracking-normal text-xs ml-1">(optional)</span>
           </div>

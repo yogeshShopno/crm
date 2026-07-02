@@ -202,7 +202,7 @@ export default function DatePicker({
           setOpen((o) => !o);
         }}
         className={`w-full flex items-center justify-between gap-2 border rounded-lg px-3 py-2 text-sm text-left transition-all
-          ${error ? 'border-red-500' : open ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-300'}
+          ${error ? 'border-red-500' : open ? 'border-primary ring-1 ring-ring' : 'border-gray-300'}
           ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-400' : 'bg-white hover:border-gray-400 cursor-pointer'}
         `}
       >
@@ -265,9 +265,9 @@ export default function DatePicker({
                   disabled={!current}
                   onClick={() => current && selectDate(cell.day)}
                   className={`h-8 w-full text-[13px] rounded-lg transition-all
-                    ${!current ? 'text-gray-300 cursor-default' : 'cursor-pointer hover:bg-blue-50'}
-                    ${sel ? 'bg-blue-500 text-white font-semibold hover:bg-blue-600' : ''}
-                    ${tod && !sel ? 'text-blue-600 font-bold ring-1 ring-blue-300' : ''}
+                    ${!current ? 'text-gray-300 cursor-default' : 'cursor-pointer hover:bg-primary/5'}
+                    ${sel ? 'bg-primary/50 text-white font-semibold hover:bg-primary' : ''}
+                    ${tod && !sel ? 'text-primary font-bold ring-1 ring-blue-300' : ''}
                     ${current && !sel && !tod ? 'text-gray-700' : ''}
                   `}
                 >
@@ -282,7 +282,7 @@ export default function DatePicker({
             <button
               type="button"
               onClick={goToToday}
-              className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-xs font-medium text-primary hover:text-primary transition-colors"
             >
               Today
             </button>

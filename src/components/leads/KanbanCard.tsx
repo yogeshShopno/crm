@@ -46,7 +46,7 @@ export default function KanbanCard({
         >
             {isUpdating && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/40">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
                 </div>
             )}
             <div className="flex items-start justify-between gap-2">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Dialog from '@/components/Dialog';
@@ -32,25 +32,6 @@ type TaskStatusItem = {
     color: string;
 };
 
-// Validation schema
-const validationSchema = Yup.object({
-    name: Yup.string()
-        .required('Status name is required')
-        .min(2, 'Status name must be at least 2 characters')
-        .max(50, 'Status name must be at most 50 characters')
-        .matches(/^[a-zA-Z0-9\s&-]+$/, 'Status name can only contain letters, numbers, spaces, &, and -'),
-
-    order: Yup.number()
-        .required('Order is required')
-        .integer('Order must be a whole number')
-        .min(1, 'Order must be at least 1')
-        .max(9999, 'Order must be at most 9999'),
-
-    color: Yup.string()
-        .required('Color is required')
-        .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid hex color code. Use format: #RRGGBB or #RGB'),
-});
-
 export function TaskStatusContent() {
     const [allData, setAllData] = useState<TaskStatusItem[]>([]);
     const [totalRecords, setTotalRecords] = useState(0);
@@ -66,6 +47,33 @@ export function TaskStatusContent() {
 
     const token = typeof window !== 'undefined' ? getAuthToken() : null;
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+
+    // Validation schema
+    const validationSchema = useMemo(() => Yup.object({
+        name: Yup.string()
+            .required('Status name is required')
+            .min(2, 'Status name must be at least 2 characters')
+            .max(50, 'Status name must be at most 50 characters')
+            .matches(/^[a-zA-Z0-9\s&-]+$/, 'Status name can only contain letters, numbers, spaces, &, and -')
+            .test('unique-name', 'Status name already exists', function (value) {
+                if (!value) return true;
+                const normalized = value.trim().toLowerCase();
+                return !allData.some(item => 
+                    item.name.trim().toLowerCase() === normalized && 
+                    item._id !== this.parent._id
+                );
+            }),
+
+        order: Yup.number()
+            .required('Order is required')
+            .integer('Order must be a whole number')
+            .min(1, 'Order must be at least 1')
+            .max(9999, 'Order must be at most 9999'),
+
+        color: Yup.string()
+            .required('Color is required')
+            .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid hex color code. Use format: #RRGGBB or #RGB'),
+    }), [allData]);
 
     // Initialize formik
     const formik = useFormik({
@@ -369,7 +377,7 @@ export function TaskStatusContent() {
                             type="submit"
                             form="task-status-form"
                             disabled={isSubmitting || !formik.isValid}
-                            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {isSubmitting ? (
                                 <>
@@ -423,7 +431,7 @@ export function TaskStatusContent() {
                             <input
                                 type="color"
                                 name="color"
-                                className="h-10 w-16 border border-gray-300 rounded-lg cursor-pointer shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="h-10 w-16 border border-gray-300 rounded-lg cursor-pointer shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
                                 value={formik.values.color}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -434,7 +442,7 @@ export function TaskStatusContent() {
                                 name="color"
                                 className={`flex-1 border rounded-lg px-3 py-2 font-mono shadow-sm focus:outline-none focus:ring-1 ${formik.touched.color && formik.errors.color
                                         ? 'border-red-500 focus:ring-red-200'
-                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                                        : 'border-gray-300 focus:border-ring focus:ring-ring/20'
                                     }`}
                                 placeholder="#6B7280"
                                 value={formik.values.color}

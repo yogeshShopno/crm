@@ -124,18 +124,47 @@ export default function LeadsPage() {
   const [editingNextFollowupTime, setEditingNextFollowupTime] = useState("");
   const [requiredFields, setRequiredFields] = useState<string[]>([]);
 
+  const isRequired = (fieldName: string) => {
+    const map: Record<string, string> = {
+      fullName: 'customerName',
+      companyName: 'companyName',
+      address: 'address',
+      contact: 'customerContact',
+      email: 'customerEmail',
+      leadSource: 'leadSource',
+      leadStatus: 'leadStatus',
+      assignedTo: 'assignedTo'
+    };
+    const key = map[fieldName] || fieldName;
+    if (fieldName === 'contact') return true; // Phone is always required for reseller
+    return requiredFields.includes(key);
+  };
+
   useEffect(() => {
-    const loadRequiredFields = () => {
+    const loadRequiredFields = async () => {
       const saved = sessionStorage.getItem('leadRequiredFields');
       if (saved) {
         try {
           setRequiredFields(JSON.parse(saved));
-        } catch (e) {
-          setRequiredFields(['fullName', 'contact', 'email', 'leadSource', 'leadStatus', 'assignedTo']);
-        }
-      } else {
-        setRequiredFields(['fullName', 'contact', 'email', 'leadSource', 'leadStatus', 'assignedTo']);
+          return;
+        } catch {}
       }
+      // Fetch from API
+      const token = getAuthToken();
+      if (token) {
+        try {
+          const res = await axios.get(baseUrl.settingsRequiredFields, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const reqs = res.data?.data?.requiredLeads || [];
+          setRequiredFields(reqs);
+          sessionStorage.setItem('leadRequiredFields', JSON.stringify(reqs));
+          return;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      setRequiredFields(['customerName', 'customerContact', 'leadSource', 'leadStatus']);
     };
 
     loadRequiredFields();
@@ -208,7 +237,7 @@ export default function LeadsPage() {
   };
 
   const fetchStaff = async () => {
-    setStaffMembers(mockData.users);
+    setStaffMembers(mockData.users as any);
   };
 
   useEffect(() => {
@@ -224,17 +253,28 @@ export default function LeadsPage() {
   const handleSaveLead = async () => {
     // Dynamic validation based on settings
     const missingFields: string[] = [];
-    if (requiredFields.includes('fullName') && !addForm.name) missingFields.push('Full Name');
-    if (requiredFields.includes('companyName') && !addForm.companyName) missingFields.push('Company Name');
-    if (requiredFields.includes('address') && !addForm.address) missingFields.push('Address');
-    if (requiredFields.includes('contact') && !addForm.phone) missingFields.push('Phone');
-    if (requiredFields.includes('email') && !addForm.email) missingFields.push('Email');
-    if (requiredFields.includes('leadStatus') && !addForm.status && !editingLead) missingFields.push('Status');
-    if (requiredFields.includes('assignedTo') && !addForm.staff) missingFields.push('Assigned Staff');
-
+    if (isRequired('fullName') && !addForm.name.trim()) missingFields.push('Full Name');
+    if (isRequired('companyName') && !addForm.companyName?.trim()) missingFields.push('Company Name');
+    if (isRequired('address') && !addForm.address?.trim()) missingFields.push('Address');
+    if (isRequired('contact') && !addForm.phone.trim()) missingFields.push('Phone');
+    if (isRequired('email') && !addForm.email.trim()) missingFields.push('Email');
+    if (isRequired('leadStatus') && !addForm.status && !editingLead) missingFields.push('Status');
+    if (isRequired('assignedTo') && !addForm.staff) missingFields.push('Assigned Staff');
 
     if (missingFields.length > 0) {
       toast.error(`Required fields missing: ${missingFields.join(', ')}`);
+      return;
+    }
+
+    // Email format validation
+    if (addForm.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addForm.email.trim())) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    // Phone format validation
+    if (addForm.phone.trim() && !/^\+?[0-9\s-]{8,20}$/.test(addForm.phone.trim())) {
+      toast.error('Please enter a valid phone number (8-20 digits)');
       return;
     }
 
@@ -481,7 +521,7 @@ export default function LeadsPage() {
           </div>
 
           <button
-            className="ml-auto flex items-center gap-2 px-6 py-2.5 rounded-lg bg-secondary hover:bg-blue-700 text-white text-sm font-semibold shadow"
+            className="ml-auto flex items-center gap-2 px-6 py-2.5 rounded-lg bg-secondary hover:bg-primary/90 text-white text-sm font-semibold shadow"
             onClick={() => {
               setEditingLead(null);
               resetForm();
@@ -695,7 +735,7 @@ export default function LeadsPage() {
                       )}
                       {loadingMoreMap[status.id] && (
                         <div className="flex justify-center mt-3 p-2">
-                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
                         </div>
                       )}
                     </div>
@@ -802,7 +842,7 @@ export default function LeadsPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => handleView(l._id)}
-                                  className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
                                 >
                                   View
                                 </button>
@@ -926,7 +966,7 @@ export default function LeadsPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => handleView(l._id)}
-                                  className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
                                 >
                                   View
                                 </button>
@@ -983,7 +1023,7 @@ export default function LeadsPage() {
           <form noValidate className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Full Name {requiredFields.includes('fullName') && <span className="text-red-500">*</span>}
+                Full Name {isRequired('fullName') && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="text"
@@ -991,12 +1031,12 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, name: e.target.value }))
                 }
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Company Name {requiredFields.includes('companyName') && <span className="text-red-500">*</span>}
+                Company Name {isRequired('companyName') && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="text"
@@ -1004,12 +1044,12 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, companyName: e.target.value }))
                 }
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Address {requiredFields.includes('address') && <span className="text-red-500">*</span>}
+                Address {isRequired('address') && <span className="text-red-500">*</span>}
               </label>
               <textarea
                 rows={3}
@@ -1017,12 +1057,12 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, address: e.target.value }))
                 }
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Phone {requiredFields.includes('contact') && <span className="text-red-500">*</span>}
+                Phone {isRequired('contact') && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="text"
@@ -1030,12 +1070,12 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, phone: e.target.value }))
                 }
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">
-                Email {requiredFields.includes('email') && <span className="text-red-500">*</span>}
+                Email {isRequired('email') && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="email"
@@ -1043,7 +1083,7 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, email: e.target.value }))
                 }
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1057,7 +1097,7 @@ export default function LeadsPage() {
                   onChange={(e) =>
                     setAddForm((p) => ({ ...p, product: e.target.value }))
                   }
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
                 />
               </div>
               <div>
@@ -1070,7 +1110,7 @@ export default function LeadsPage() {
                   onChange={(e) =>
                     setAddForm((p) => ({ ...p, paymentAmount: e.target.value }))
                   }
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
                 />
               </div>
 
@@ -1078,11 +1118,11 @@ export default function LeadsPage() {
               {!editingLead && (
                 <div>
                   <label className="block text-sm font-medium text-slate-700">
-                    Status {requiredFields.includes('leadStatus') && <span className="text-red-500">*</span>}
+                    Status {isRequired('leadStatus') && <span className="text-red-500">*</span>}
                   </label>
                   <select
                     value={addForm.status}
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
                     onChange={(e) =>
                       setAddForm((p) => ({ ...p, status: e.target.value }))
                     }
@@ -1105,7 +1145,7 @@ export default function LeadsPage() {
                   onChange={(e) =>
                     setAddForm((p) => ({ ...p, staff: e.target.value }))
                   }
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-blue-500"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-1 focus:ring-ring"
                 >
                   <option value="">Select Staff</option>
                   {staffMembers.map((s) => (
@@ -1124,7 +1164,7 @@ export default function LeadsPage() {
                 onChange={(e) =>
                   setAddForm((p) => ({ ...p, isActive: e.target.checked }))
                 }
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-ring"
               />
               <label
                 htmlFor="isActive"
@@ -1204,7 +1244,7 @@ export default function LeadsPage() {
                         href={attachment.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline block"
+                        className="text-primary hover:underline block"
                       >
                         {attachment.name}
                       </a>

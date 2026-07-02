@@ -199,7 +199,7 @@ export function SettlementsContent() {
       label: 'TOTAL LEADS',
       render: (value) => (
         <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-blue-500" />
+          <Users className="h-4 w-4 text-primary" />
           <span className="font-medium">{value}</span>
         </div>
       ),
@@ -299,7 +299,7 @@ export function SettlementsContent() {
       key: 'status',
       label: 'STATUS',
       render: (value) => (
-        <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
           {value}
         </span>
       ),
@@ -369,8 +369,8 @@ export function SettlementsContent() {
               <p className="text-sm font-medium text-gray-500 mb-1">Total Commissions</p>
               <h3 className="text-2xl font-bold text-gray-900 flex items-center"><IndianRupee className="h-5 w-5 mr-1 text-gray-600"/>{totalCommissionAmount.toLocaleString('en-IN')}</h3>
             </div>
-            <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-              <Banknote className="h-6 w-6 text-blue-600" />
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Banknote className="h-6 w-6 text-primary" />
             </div>
           </div>
           <div className="bg-white rounded-xl border border-green-200 p-6 shadow-sm bg-green-50 flex items-center justify-between">

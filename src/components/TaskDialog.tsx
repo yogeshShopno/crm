@@ -596,7 +596,7 @@ export default function TaskDialog({ isOpen, onClose, mode, initialData, onSucce
                             className="w-10 h-10 rounded-lg object-contain flex-shrink-0 border border-gray-200"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                          <div className="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
                             {getFileIcon(att.originalName)}
                           </div>
                         )}
@@ -620,7 +620,7 @@ export default function TaskDialog({ isOpen, onClose, mode, initialData, onSucce
                           title="View"
                           disabled={deletingAttachmentIds.has(att._id)}
                           onClick={() => setPreviewUrl(fileUrl)}
-                          className="p-1.5 cursor-pointer rounded-lg hover:bg-blue-100 text-blue-500 transition disabled:opacity-40"
+                          className="p-1.5 cursor-pointer rounded-lg hover:bg-primary/10 text-primary transition disabled:opacity-40"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -662,7 +662,7 @@ export default function TaskDialog({ isOpen, onClose, mode, initialData, onSucce
               onChange={(e) => setAttachments(Array.from(e.target.files || []))}
               className="w-full text-sm text-gray-600
                          file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0
-                         file:bg-blue-50 file:text-blue-700 file:text-sm hover:file:bg-blue-100"
+                         file:bg-primary/5 file:text-primary file:text-sm hover:file:bg-primary/10"
             />
             {attachments.length > 0 && (
               <ul className="mt-1 space-y-0.5">
@@ -687,7 +687,7 @@ export default function TaskDialog({ isOpen, onClose, mode, initialData, onSucce
             <button
               type="submit"
               disabled={loading || !formik.isValid || (formik.dirty === false && mode === 'edit')}
-              className="px-6 py-2.5 cursor-pointer rounded-xl bg-secondary text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 flex items-center gap-2 transition"
+              className="px-6 py-2.5 cursor-pointer rounded-xl bg-secondary text-white text-sm font-semibold hover:bg-primary/90 disabled:opacity-60 flex items-center gap-2 transition"
             >
               {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               {mode === 'add' ? 'Create Task' : 'Update Task'}
@@ -734,7 +734,7 @@ export default function TaskDialog({ isOpen, onClose, mode, initialData, onSucce
                   <a
                     href={previewUrl}
                     download
-                    className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+                    className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90"
                   >
                     Download File
                   </a>

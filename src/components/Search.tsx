@@ -33,7 +33,7 @@ export default function Search({ onSearch, placeholder = 'Search by name, email,
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm text-gray-900 placeholder:text-gray-400 transition-all focus:border-sky-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-200"
+          className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm text-gray-900 placeholder:text-gray-400 transition-all focus:border-sky-950 focus:bg-white focus:outline-none focus:ring-1 focus:ring-ring/20"
         />
         {query && (
           <button

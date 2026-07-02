@@ -176,7 +176,7 @@ export default function Dashboard() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      New: "bg-blue-100 text-blue-700 border-blue-200",
+      New: "bg-primary/10 text-primary border-primary/20",
       Contacted: "bg-purple-100 text-purple-700 border-purple-200",
       "Follow-Up": "bg-orange-100 text-orange-700 border-orange-200",
       Interested: "bg-green-100 text-green-700 border-green-200",
@@ -195,7 +195,7 @@ export default function Dashboard() {
       case 'medium':
         return 'bg-orange-100 text-orange-700 border-orange-200';
       case 'low':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return 'bg-primary/10 text-primary border-primary/20';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -211,7 +211,7 @@ export default function Dashboard() {
       statusWiseCounts: mockData.statuses.map(s => ({
         statusId: s._id,
         statusName: s.name,
-        count: mockData.leads.filter(l => l.leadStatus === s._id).length
+        count: mockData.leads.filter(l => l.leadStatus._id === s._id).length
       }))
     });
   };
@@ -231,7 +231,7 @@ export default function Dashboard() {
 
   const fetchStaffPerformance = async () => {
     const chartData = mockData.users.map(u => ({
-      name: u.fullName,
+      name: u.fullName || '',
       converted: Math.floor(Math.random() * 20),
       pending: Math.floor(Math.random() * 15),
       lost: Math.floor(Math.random() * 5),
@@ -340,8 +340,8 @@ export default function Dashboard() {
         trend: 12.5,
         tone: "up",
         Icon: Users,
-        iconBg: "bg-blue-500/10",
-        iconColor: "text-blue-500",
+        iconBg: "bg-primary/50/10",
+        iconColor: "text-primary",
         type: "total",
         fill: "var(--primary)",
         name: "Total Leads",
@@ -522,9 +522,9 @@ export default function Dashboard() {
       <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${dateHeader === "Follow up Date" ? "bg-blue-50" : "bg-red-50"}`}>
+            <div className={`p-2 rounded-lg ${dateHeader === "Follow up Date" ? "bg-primary/5" : "bg-red-50"}`}>
               {dateHeader === "Follow up Date" ? (
-                <Clock className="h-5 w-5 text-blue-600" />
+                <Clock className="h-5 w-5 text-primary" />
               ) : (
                 <AlertCircle className="h-5 w-5 text-red-500" />
               )}
@@ -532,7 +532,7 @@ export default function Dashboard() {
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
           </div>
           <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${dateHeader === "Follow up Date"
-            ? "bg-blue-100 text-blue-700"
+            ? "bg-primary/10 text-primary"
             : "bg-red-100 text-red-700"
             }`}>
             {items.length} {items.length === 1 ? 'Lead' : 'Leads'}
@@ -560,7 +560,7 @@ export default function Dashboard() {
               {items.map((lead, index) => (
                 <div
                   key={lead._id || lead.id || index}
-                  className="p-4 hover:bg-blue-50/20 transition-all cursor-pointer group"
+                  className="p-4 hover:bg-primary/5/20 transition-all cursor-pointer group"
                   onClick={() => {
                     setSelectedLead(lead);
                     setDrawerOpen(true);
@@ -725,7 +725,7 @@ export default function Dashboard() {
               {greeting}, {user?.fullName?.split(' ')[0] || 'User'} ! 
             </h2>
             <p className="text-gray-500 mt-1 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-blue-500" />
+              <Activity className="h-4 w-4 text-primary" />
               Here's what's happening with your projects today.
             </p>
           </div>
@@ -734,7 +734,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-2xl border border-gray-100">
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <label className="absolute -top-2 left-3 px-1 bg-white text-[9px] font-bold text-blue-500 uppercase tracking-widest z-10">From</label>
+                  <label className="absolute -top-2 left-3 px-1 bg-white text-[9px] font-bold text-primary uppercase tracking-widest z-10">From</label>
                   <DatePicker
                     value={fromDate}
                     onChange={(val) => setFromDate(val)}
@@ -742,7 +742,7 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className="relative">
-                  <label className="absolute -top-2 left-3 px-1 bg-white text-[9px] font-bold text-blue-500 uppercase tracking-widest z-10">To</label>
+                  <label className="absolute -top-2 left-3 px-1 bg-white text-[9px] font-bold text-primary uppercase tracking-widest z-10">To</label>
                   <DatePicker
                     value={toDate}
                     onChange={(val) => setToDate(val)}
@@ -767,7 +767,7 @@ export default function Dashboard() {
             <div
               key={card.key}
               onClick={() => handleCardClick(card)}
-              className="group relative overflow-hidden bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 cursor-pointer"
+              className="group relative overflow-hidden bg-white p-6 rounded-2xl border border-gray-200 hover:border-primary/50 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 cursor-pointer"
             >
               <div className="flex items-start justify-between">
                 <div className={`p-3 rounded-xl ${card.iconBg} ${card.iconColor} transition-transform duration-300 group-hover:scale-110`}>
@@ -832,7 +832,7 @@ export default function Dashboard() {
                           return (
                             <div className="bg-white border border-gray-100 p-3 rounded-xl shadow-xl">
                               <p className="text-sm font-bold text-gray-900">{payload[0].name}</p>
-                              <p className="text-sm text-blue-600 font-semibold">{payload[0].value} Leads</p>
+                              <p className="text-sm text-primary font-semibold">{payload[0].value} Leads</p>
                             </div>
                           );
                         }
@@ -1016,12 +1016,12 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col max-h-[500px]">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Users className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-primary/5 rounded-lg">
+                  <Users className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Recent Leads</h3>
               </div>
-              <Link href="/leads/list" className="text-sm font-semibold text-blue-600 hover:text-blue-700">View All</Link>
+              <Link href="/leads/list" className="text-sm font-semibold text-primary hover:text-primary">View All</Link>
             </div>
             {leadsLoading ? (
               <div className="flex-1 flex justify-center items-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div></div>

@@ -185,7 +185,7 @@ export default function LedgerPage() {
           <select
             value={selectedMonth}
             onChange={e => setSelectedMonth(e.target.value)}
-            className="border-gray-300  rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="border-gray-300  rounded-md shadow-sm focus:ring-ring focus:border-ring sm:text-sm"
           >
             <option value="">All Months</option>
             <option value="1">January</option>
@@ -205,7 +205,7 @@ export default function LedgerPage() {
           <select
             value={selectedYear}
             onChange={e => setSelectedYear(e.target.value)}
-            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-ring focus:border-ring sm:text-sm"
           >
             <option value="2024">2024</option>
             <option value="2025">2025</option>
@@ -215,7 +215,7 @@ export default function LedgerPage() {
           <select
             value={selectedReseller}
             onChange={e => setSelectedReseller(e.target.value)}
-            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-ring focus:border-ring sm:text-sm"
           >
             <option value="">All Resellers</option>
             {uniqueResellers.map((r: any) => (
@@ -226,7 +226,7 @@ export default function LedgerPage() {
           <select
             value={selectedMethod}
             onChange={e => setSelectedMethod(e.target.value)}
-            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-ring focus:border-ring sm:text-sm"
           >
             <option value="">All Methods</option>
             <option value="Bank Transfer">Bank Transfer</option>
@@ -238,7 +238,7 @@ export default function LedgerPage() {
             type="date"
             value={selectedDate}
             onChange={e => setSelectedDate(e.target.value)}
-            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="border-gray-300 p-2 rounded-md shadow-sm focus:ring-ring focus:border-ring sm:text-sm"
           />
         </div>
       </div>

@@ -25,7 +25,7 @@ export interface TaskSummary {
 
 export const LEGACY_STATUS_OPTIONS = [
   { value: 'todo',        label: 'To Do',       cls: 'bg-gray-100 text-gray-700',  color: '#6B7280' },
-  { value: 'in_progress', label: 'In Progress',  cls: 'bg-blue-100 text-blue-700',  color: 'var(--primary)' },
+  { value: 'in_progress', label: 'In Progress',  cls: 'bg-primary/10 text-primary',  color: 'var(--primary)' },
   { value: 'completed',   label: 'Completed',    cls: 'bg-green-100 text-green-700', color: '#10B981' },
   { value: 'cancelled',   label: 'Cancelled',    cls: 'bg-red-100 text-red-700',    color: '#EF4444' },
 ];

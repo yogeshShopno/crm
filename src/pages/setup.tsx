@@ -216,7 +216,7 @@ export default function Setup() {
                     key={item.name}
                     onClick={() => handleTabChange(item.name)}
                     className={`flex shrink-0 md:w-full items-center gap-3 cursor-pointer rounded-md px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === item.name
-                        ? "bg-blue-50 text-blue-700"
+                        ? "bg-primary/5 text-primary"
                         : "text-gray-700 hover:bg-gray-50"
                       }`}
                   >
@@ -277,7 +277,7 @@ export default function Setup() {
                             <label
                               key={status.name}
                               className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm cursor-pointer transition-colors ${isChecked
-                                ? 'border-blue-200 bg-blue-50'
+                                ? 'border-primary/20 bg-primary/5'
                                 : 'border-gray-200 hover:bg-gray-50'
                                 }`}
                             >
@@ -285,7 +285,7 @@ export default function Setup() {
                                 type="checkbox"
                                 checked={isChecked}
                                 onChange={(e) => handleCheckboxChange(status.name, e.target.checked)}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-ring"
                               />
                               <span className="text-gray-800 font-medium">{status.name}</span>
                               {status.order && (
@@ -305,7 +305,7 @@ export default function Setup() {
                       type="button"
                       onClick={handleSaveKanbanStatuses}
                       disabled={leadStatuses.length === 0}
-                      className="px-6 cursor-pointer py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-6 cursor-pointer py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Save Changes
                     </button>

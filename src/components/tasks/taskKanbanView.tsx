@@ -193,7 +193,7 @@ export default function TaskKanbanView({
               </div>
 
               <div
-                className={`flex-1 overflow-y-auto rounded-b-2xl bg-[#f4f7fb] p-3 space-y-4 min-h-[400px] transition-colors ${dragOverStatus === status._id ? 'bg-blue-50' : ''
+                className={`flex-1 overflow-y-auto rounded-b-2xl bg-[#f4f7fb] p-3 space-y-4 min-h-[400px] transition-colors ${dragOverStatus === status._id ? 'bg-primary/5' : ''
                   }`}
                 onScroll={(e) => {
                   const t = e.target as HTMLDivElement;
@@ -255,7 +255,7 @@ function KanbanCard({ task, statusId, isDragging, isUpdating, onDragStart, onVie
     <div
       draggable={!isUpdating}
       onDragStart={() => onDragStart(task._id, statusId)}
-      className={`group bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col justify-between h-[180px] ${isDragging ? 'opacity-50 scale-95 ring-1 ring-blue-500' : ''
+      className={`group bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col justify-between h-[180px] ${isDragging ? 'opacity-50 scale-95 ring-1 ring-ring' : ''
         } ${isUpdating ? 'opacity-70 pointer-events-none' : ''}`}
     >
       <div className="relative h-full flex flex-col justify-between">
@@ -267,14 +267,14 @@ function KanbanCard({ task, statusId, isDragging, isUpdating, onDragStart, onVie
         <div className="space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div
-              className="font-bold text-gray-900 line-clamp-2 leading-tight cursor-pointer hover:text-blue-600 transition-colors"
+              className="font-bold text-gray-900 line-clamp-2 leading-tight cursor-pointer hover:text-primary transition-colors"
               onClick={onView}
             >
               {task.subject}
             </div>
 
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={(e) => { e.stopPropagation(); onView(); }} className="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 shadow-sm transition-all" title="View"><Eye className="w-3.5 h-3.5" /></button>
+              <button onClick={(e) => { e.stopPropagation(); onView(); }} className="p-1.5 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 shadow-sm transition-all" title="View"><Eye className="w-3.5 h-3.5" /></button>
               <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 shadow-sm transition-all" title="Edit"><Edit className="w-3.5 h-3.5" /></button>
               <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 shadow-sm transition-all" title="Delete"><Trash2 className="w-3.5 h-3.5" /></button>
             </div>
@@ -297,7 +297,7 @@ function KanbanCard({ task, statusId, isDragging, isUpdating, onDragStart, onVie
           {task.assignedUsers?.slice(0, 3).map((u: any) => (
             <div
               key={u._id}
-              className="h-7 w-7 rounded-full border-2 border-white bg-blue-500 flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-gray-100"
+              className="h-7 w-7 rounded-full border-2 border-white bg-primary/50 flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-gray-100"
               title={u.fullName}
             >
               {u.fullName?.charAt(0).toUpperCase() || '?'}

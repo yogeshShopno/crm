@@ -38,6 +38,24 @@ export function DepartmentsContent() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get('/api/reseller', { headers });
+      setAllUsers(res.data?.data || []);
+    } catch (err) {
+      console.error('Failed to fetch users', err);
+    }
+  };
+
+  const getDepartmentUsers = (deptId: string) => {
+    return allUsers.filter(u => 
+      typeof u.department === 'object' 
+        ? u.department?._id === deptId 
+        : u.department === deptId
+    );
+  };
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,7 +97,10 @@ export function DepartmentsContent() {
     }
   };
 
-  useEffect(() => { fetchData(); }, [debouncedSearch, currentPage, pageSize]);
+  useEffect(() => {
+    fetchData();
+    fetchUsers();
+  }, [debouncedSearch, currentPage, pageSize]);
 
   const handleSave = async (values: { _id?: string; name: string }) => {
     setIsSubmitting(true);
@@ -142,6 +163,23 @@ export function DepartmentsContent() {
       render: (val: any) => <span className="font-medium text-gray-900">{val || '-'}</span>,
     },
     {
+      key: 'users',
+      label: 'DEPARTMENT USERS',
+      render: (val, row) => {
+        const users = getDepartmentUsers(row._id);
+        if (users.length === 0) return <span className="text-gray-400">No users</span>;
+        return (
+          <div className="flex flex-wrap gap-1">
+            {users.map(u => (
+              <span key={u._id} className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                {u.fullName}
+              </span>
+            ))}
+          </div>
+        );
+      }
+    },
+    {
       key: 'createdAt',
       label: 'CREATED DATE',
       sortable: true,
@@ -161,7 +199,7 @@ export function DepartmentsContent() {
             resetForm();
             setIsDialogOpen(true);
           }}
-          className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 transition"
+          className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary transition"
         >
           Add Department
         </button>
@@ -178,7 +216,7 @@ export function DepartmentsContent() {
           onPageChange={setCurrentPage}
           onPageSizeChange={setPageSize}
           onSearch={setSearch}
-          searchValue={search}
+          searchable={true}
           onEdit={handleEdit}
           onDelete={handleDeleteClick}
           canEdit={() => true}
@@ -189,12 +227,34 @@ export function DepartmentsContent() {
       {/* Delete Confirmation */}
       <DeleteDialog
         isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
         title="Delete Department"
-        message={`Are you sure you want to delete the department "${toDelete?.name}"?`}
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setShowDeleteDialog(false)}
-        loading={isDeleting}
-      />
+        size="md"
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={() => setShowDeleteDialog(false)}
+              className="px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmDelete}
+              className="px-6 py-2.5 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition cursor-pointer"
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+          </>
+        }
+      >
+        <p className="text-gray-600">
+          Are you sure you want to delete the department "{toDelete?.name}"?
+        </p>
+      </DeleteDialog>
 
       {/* Add/Edit Dialog */}
       <Dialog
@@ -204,7 +264,6 @@ export function DepartmentsContent() {
       >
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           <FormInput
-            id="name"
             name="name"
             label="Department Name"
             placeholder="e.g. Human Resources"
@@ -224,7 +283,7 @@ export function DepartmentsContent() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-blue-600 transition disabled:opacity-50"
+              className="px-6 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary transition disabled:opacity-50"
             >
               {isSubmitting ? 'Saving...' : 'Save'}
             </button>

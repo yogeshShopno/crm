@@ -165,7 +165,7 @@ export default function TimePicker({
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
         className={`w-full flex items-center justify-between gap-2 border rounded-lg px-3 py-2 text-sm text-left transition-all
-          ${error ? 'border-red-500' : open ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-300'}
+          ${error ? 'border-red-500' : open ? 'border-primary ring-1 ring-ring' : 'border-gray-300'}
           ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-400' : 'bg-white hover:border-gray-400 cursor-pointer'}
         `}
       >
@@ -194,7 +194,7 @@ export default function TimePicker({
               >
                 <ChevronUp className="h-4 w-4" />
               </button>
-              <div className="w-12 h-10 flex items-center justify-center rounded-lg bg-blue-50 text-blue-700 text-xl font-bold">
+              <div className="w-12 h-10 flex items-center justify-center rounded-lg bg-primary/5 text-primary text-xl font-bold">
                 {pad(hour)}
               </div>
               <button
@@ -217,7 +217,7 @@ export default function TimePicker({
               >
                 <ChevronUp className="h-4 w-4" />
               </button>
-              <div className="w-12 h-10 flex items-center justify-center rounded-lg bg-blue-50 text-blue-700 text-xl font-bold">
+              <div className="w-12 h-10 flex items-center justify-center rounded-lg bg-primary/5 text-primary text-xl font-bold">
                 {pad(minute)}
               </div>
               <button
@@ -240,7 +240,7 @@ export default function TimePicker({
                   }
                 }}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all
-                  ${period === 'AM' ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}
+                  ${period === 'AM' ? 'bg-primary/50 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}
                 `}
               >
                 AM
@@ -254,7 +254,7 @@ export default function TimePicker({
                   }
                 }}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all
-                  ${period === 'PM' ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}
+                  ${period === 'PM' ? 'bg-primary/50 text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}
                 `}
               >
                 PM
@@ -267,14 +267,14 @@ export default function TimePicker({
             <button
               type="button"
               onClick={setNow}
-              className="text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-xs font-medium text-primary hover:text-primary transition-colors"
             >
               Now
             </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-xs font-medium px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              className="text-xs font-medium px-3 py-1 bg-primary/50 text-white rounded-md hover:bg-primary transition-colors"
             >
               Done
             </button>

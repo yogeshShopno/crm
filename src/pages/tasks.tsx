@@ -267,7 +267,7 @@ export default function TasksPage() {
 
               <button
                 onClick={() => { setEditTask(null); setShowDialog(true); }}
-                className="cursor-pointer flex items-center gap-2 px-6 py-2.5 rounded-md bg-secondary hover:bg-blue-700 text-white text-sm font-semibold shadow-md active:scale-95 transition-all"
+                className="cursor-pointer flex items-center gap-2 px-6 py-2.5 rounded-md bg-secondary hover:bg-primary/90 text-white text-sm font-semibold shadow-md active:scale-95 transition-all"
               >
                 <Plus className="w-4 h-4" />
                 Add Task

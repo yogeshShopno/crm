@@ -204,7 +204,7 @@ export default function DataTable<T extends Record<string, any>>({
             {/* {onExport && (
               <button
                 onClick={onExport}
-                className="group relative inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2"
+                className="group relative inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2"
               >
                 <FiDownload className="h-4 w-4" />
                 <span className="hidden sm:inline">Export</span>
@@ -226,7 +226,7 @@ export default function DataTable<T extends Record<string, any>>({
 
             {/* <button
               onClick={() => setShowFilters(!showFilters)}
-              className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2"
             >
               <FiFilter className="h-4 w-4" />
               <span className="hidden sm:inline">Filters</span>
@@ -290,7 +290,7 @@ export default function DataTable<T extends Record<string, any>>({
               <tr>
                 <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-16 text-center">
                   <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-200 border-r-blue-600"></div>
+                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary/20 border-r-blue-600"></div>
                     <p className="text-sm font-medium text-gray-600">Loading your data...</p>
                   </div>
                 </td>
@@ -307,7 +307,7 @@ export default function DataTable<T extends Record<string, any>>({
                     {addButton && (
                       <button
                         onClick={addButton.onClick}
-                        className="mt-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                        className="mt-2 text-sm font-medium text-primary hover:text-primary transition-colors"
                       >
                         + Add your first record
                       </button>
@@ -398,7 +398,7 @@ export default function DataTable<T extends Record<string, any>>({
                             const evaluatedColor = typeof act.color === 'function' ? act.color(row) : act.color;
 
                             const colors: Record<string, string> = {
-                              blue: 'text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-blue-500',
+                              blue: 'text-primary hover:bg-primary hover:text-white focus:ring-ring',
                               green: 'text-green-600 hover:bg-green-600 hover:text-white focus:ring-green-500',
                               red: 'text-red-600 hover:bg-red-500 hover:text-white focus:ring-red-500',
                               orange: 'text-orange-600 hover:bg-orange-500 hover:text-white focus:ring-orange-500',
@@ -489,7 +489,7 @@ export default function DataTable<T extends Record<string, any>>({
                 disabled={currentPage === 1}
                 className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border transition-all duration-200 ${currentPage === 1
                   ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2'
                   }`}
               >
                 <FiChevronLeft className="h-4 w-4" />
@@ -521,7 +521,7 @@ export default function DataTable<T extends Record<string, any>>({
                 disabled={currentPage === totalPages}
                 className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border transition-all duration-200 ${currentPage === totalPages
                   ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2'
                   }`}
               >
                 <FiChevronRight className="h-4 w-4" />

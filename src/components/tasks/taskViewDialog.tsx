@@ -114,7 +114,7 @@ export default function TaskViewDialog({ task, taskStatuses, onClose }: TaskView
             <div className="flex flex-wrap gap-1 mt-1">
               {task.assignedUsers?.length
                 ? task.assignedUsers.map((u) => (
-                  <span key={u._id} className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-xs">{u.fullName}</span>
+                  <span key={u._id} className="px-2 py-0.5 bg-primary/5 text-primary rounded-full text-xs">{u.fullName}</span>
                 ))
                 : <span className="text-gray-400">-</span>}
             </div>
@@ -167,7 +167,7 @@ export default function TaskViewDialog({ task, taskStatuses, onClose }: TaskView
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => isImage ? openImageModal(fileUrl, a.originalName) : window.open(fileUrl, '_blank')}
-                        className="p-2 cursor-pointer hover:bg-white rounded-lg transition text-gray-600 hover:text-blue-600"
+                        className="p-2 cursor-pointer hover:bg-white rounded-lg transition text-gray-600 hover:text-primary"
                         title="View"
                       >
                         <Eye className="h-4 w-4" />

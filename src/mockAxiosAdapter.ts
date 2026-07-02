@@ -49,10 +49,11 @@ const generateId = () => `mock-${Date.now()}-${Math.floor(Math.random() * 1000)}
 
 // Mapping routes to collections
 const getCollectionName = (url: string) => {
+  if (url.includes('/statuses') || url.includes('/lead-status') || url.includes('/leadstatus')) return 'statuses';
+  if (url.includes('/sources') || url.includes('/leadsources')) return 'sources';
+  if (url.includes('/taskstatus') || url.includes('/taskstatuses')) return 'taskstatuses';
   if (url.includes('/leads')) return 'leads';
   if (url.includes('/users') || url.includes('/staff')) return 'users';
-  if (url.includes('/statuses') || url.includes('/lead-status')) return 'statuses';
-  if (url.includes('/sources')) return 'sources';
   if (url.includes('/tasks')) return 'tasks';
   if (url.includes('/roles')) return 'roles';
   if (url.includes('/teams')) return 'teams';
@@ -72,7 +73,27 @@ axios.defaults.adapter = async (config) => {
   const collectionName = getCollectionName(url);
 
   if (method.toLowerCase() === 'get') {
-    if (url.includes('/kanban')) {
+    if (url.includes('/settings/lead-fields')) {
+      responseData = {
+        data: [
+          { id: 'customerName', label: 'Full Name' },
+          { id: 'companyName', label: 'Company Name' },
+          { id: 'address', label: 'Address' },
+          { id: 'customerContact', label: 'Phone' },
+          { id: 'customerEmail', label: 'Email' },
+          { id: 'leadSource', label: 'Source' },
+          { id: 'leadStatus', label: 'Status' },
+          { id: 'assignedTo', label: 'Assign Staff' }
+        ]
+      };
+    } else if (url.includes('/settings/required-fields')) {
+      responseData = {
+        data: {
+          requiredLeads: db.requiredLeads || ['customerName', 'customerContact', 'leadSource', 'leadStatus'],
+          requiredTasks: db.requiredTasks || ['subject', 'status', 'priority']
+        }
+      };
+    } else if (url.includes('/kanban')) {
       responseData = { data: db.kanbanData || [] };
     } else if (url.includes('/summary')) {
       responseData = {
@@ -94,7 +115,28 @@ axios.defaults.adapter = async (config) => {
     }
   } 
   else if (method.toLowerCase() === 'post') {
-    if (collectionName) {
+    if (url.includes('/settings/required-fields')) {
+      db.requiredLeads = parsedData.requiredLeads || [];
+      db.requiredTasks = parsedData.requiredTasks || [];
+      saveDB(db);
+      responseData = { message: 'Settings saved successfully' };
+    }
+    else if (collectionName) {
+      if (['statuses', 'sources', 'taskstatuses'].includes(collectionName)) {
+        const nameLower = (parsedData.name || '').trim().toLowerCase();
+        const exists = db[collectionName]?.some((item: any) => (item.name || '').trim().toLowerCase() === nameLower);
+        if (exists) {
+          const typeName = collectionName === 'statuses' ? 'Status' : (collectionName === 'sources' ? 'Source' : 'Task Status');
+          return {
+            data: { message: `${typeName} name already exists` },
+            status: 400,
+            statusText: 'Bad Request',
+            headers: {},
+            config,
+            request: {}
+          };
+        }
+      }
       const newItem = { _id: generateId(), id: generateId(), ...parsedData, createdAt: new Date().toISOString() };
       if (!db[collectionName]) db[collectionName] = [];
       db[collectionName].push(newItem);
@@ -108,6 +150,24 @@ axios.defaults.adapter = async (config) => {
       const id = idMatch ? idMatch[1] : parsedData._id || parsedData.id;
       
       if (db[collectionName]) {
+        if (['statuses', 'sources', 'taskstatuses'].includes(collectionName)) {
+          const nameLower = (parsedData.name || '').trim().toLowerCase();
+          const exists = db[collectionName]?.some((item: any) => 
+            (item._id !== id && item.id !== id) && 
+            (item.name || '').trim().toLowerCase() === nameLower
+          );
+          if (exists) {
+            const typeName = collectionName === 'statuses' ? 'Status' : (collectionName === 'sources' ? 'Source' : 'Task Status');
+            return {
+              data: { message: `${typeName} name already exists` },
+              status: 400,
+              statusText: 'Bad Request',
+              headers: {},
+              config,
+              request: {}
+            };
+          }
+        }
         const index = db[collectionName].findIndex((item: any) => item._id === id || item.id === id);
         if (index !== -1) {
           db[collectionName][index] = { ...db[collectionName][index], ...parsedData };

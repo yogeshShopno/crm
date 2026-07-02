@@ -15,6 +15,27 @@
       "phone": "+1987654321",
       "role": "Sales",
       "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+    },
+    {
+      "_id": "mock-1782910309613-857",
+      "id": "mock-1782910309613-555",
+      "fullName": "Charlie Miller",
+      "email": "charlie@example.com",
+      "phone": "9876543210",
+      "role": {
+        "_id": "role2",
+        "roleName": "Reseller"
+      },
+      "status": "active",
+      "commissionRate": "10",
+      "department": {
+        "_id": "mock-1782909629151-629",
+        "id": "mock-1782909629151-622",
+        "name": "Marketing",
+        "createdAt": "2026-07-01T12:40:29.151Z"
+      },
+      "password": "password123password123",
+      "createdAt": "2026-07-01T12:51:49.613Z"
     }
   ],
   "sources": [
@@ -29,6 +50,13 @@
     {
       "_id": "source3",
       "name": "Cold Call"
+    },
+    {
+      "_id": "mock-1782906142917-883",
+      "id": "mock-1782906142917-893",
+      "name": "Google Ads",
+      "order": 44,
+      "createdAt": "2026-07-01T11:42:22.917Z"
     }
   ],
   "statuses": [
@@ -63,6 +91,13 @@
     {
       "_id": "status8",
       "name": "Won"
+    },
+    {
+      "_id": "mock-1782906232139-186",
+      "id": "mock-1782906232139-156",
+      "name": "Contract Pending",
+      "order": 95,
+      "createdAt": "2026-07-01T11:43:52.139Z"
     }
   ],
   "leads": [
@@ -80,8 +115,8 @@
       "product": "CRM Pro",
       "paymentAmount": 5000,
       "leadStatus": {
-        "_id": "status6",
-        "name": "Not Interested"
+        "_id": "status2",
+        "name": "Contacted"
       },
       "assignedTo": {
         "_id": "user1",
@@ -104,7 +139,7 @@
       "paymentAmount": 12000,
       "leadStatus": {
         "_id": "status3",
-        "name": "Qualified"
+        "name": "Follow-Up"
       },
       "assignedTo": {
         "_id": "user2",
@@ -126,8 +161,8 @@
       "product": "Paper Supply",
       "paymentAmount": 1500,
       "leadStatus": {
-        "_id": "status2",
-        "name": "Contacted"
+        "_id": "status1",
+        "name": "New"
       },
       "assignedTo": {
         "_id": "user1",
@@ -273,7 +308,33 @@
     {
       "_id": "ts3",
       "name": "Completed"
+    },
+    {
+      "_id": "mock-1782906490852-313",
+      "id": "mock-1782906490852-142",
+      "name": "On Hold",
+      "order": 43,
+      "color": "#6B7280",
+      "createdAt": "2026-07-01T11:48:10.852Z"
     }
   ],
-  "departments": []
+  "departments": [
+    {
+      "_id": "mock-1782909629151-629",
+      "id": "mock-1782909629151-622",
+      "name": "Marketing",
+      "createdAt": "2026-07-01T12:40:29.151Z"
+    }
+  ],
+  "requiredLeads": [
+    "customerContact",
+    "leadSource",
+    "address",
+    "customerEmail"
+  ],
+  "requiredTasks": [
+    "subject",
+    "status",
+    "priority"
+  ]
 }

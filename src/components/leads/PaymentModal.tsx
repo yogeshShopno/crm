@@ -198,7 +198,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                     </div>
                     <button
                       onClick={() => setShowProofPreview(!showProofPreview)}
-                      className="text-xs font-medium text-primary hover:text-[#2563EB] cursor-pointer flex items-center gap-1"
+                      className="text-xs font-medium text-primary hover:text-primary-hover cursor-pointer flex items-center gap-1"
                     >
                       <Eye className="h-3.5 w-3.5" />
                       {showProofPreview ? 'Hide' : 'Preview'}
@@ -215,7 +215,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                           (e.target as HTMLImageElement).parentElement!.innerHTML =
                             '<p class="text-sm text-gray-500 py-4">Unable to load preview. <a href="' +
                             (newProofPreviewUrl || proofUrl) +
-                            '" target="_blank" class="text-blue-500 underline">Open in new tab</a></p>';
+                            '" target="_blank" class="text-primary underline">Open in new tab</a></p>';
                         }}
                       />
                     </div>
@@ -234,7 +234,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               </button>
               <button
                 onClick={() => setMode('form')}
-                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-[#2563EB] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-hover transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Pencil className="h-3.5 w-3.5" />
                 Edit Payment
@@ -308,7 +308,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                       }}
                       className={`py-2 text-sm font-medium rounded-md border cursor-pointer transition-colors ${
                         paymentMode === m
-                          ? 'border-primary text-primary bg-blue-50'
+                          ? 'border-primary text-primary bg-primary/5'
                           : errors.mode
                             ? 'border-red-500 text-red-500 hover:bg-red-50'
                             : 'border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -333,7 +333,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                         href={`${baseUrl.getImageUrl}/images/LeadAttachment/${lead.paymentProof}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline text-sm font-medium"
+                        className="text-primary hover:underline text-sm font-medium"
                       >
                         View Attachment
                       </a>
@@ -345,7 +345,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept=".jpg,.jpeg,.png,.webp"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary hover:file:bg-blue-100"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/5 file:text-primary hover:file:bg-primary/10"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP — Max 2MB</p>
@@ -369,7 +369,7 @@ export default function PaymentModal({ isOpen, onClose, lead, onSuccess }: Payme
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-[#2563EB] transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                className="flex-1 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-hover transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? 'Saving...' : (isPaid ? 'Update Payment' : 'Save Payment')}
               </button>

@@ -22,6 +22,8 @@ interface Reseller {
   state: string;
   pincode: string;
   commissionRate: string;
+  departmentId?: string;
+  departmentName?: string;
 }
 
 // Debounce hook
@@ -112,6 +114,7 @@ export function ResellersContent() {
         state?: string;
         pincode?: string;
         commissionRate?: number;
+        department?: { _id: string; name?: string } | string;
       }[]) || [];
       const pagination = res.data?.pagination || {};
 
@@ -129,6 +132,8 @@ export function ResellersContent() {
         state: item.state || '',
         pincode: item.pincode || '',
         commissionRate: String(item.commissionRate ?? '0'),
+        departmentId: typeof item.department === 'object' ? (item.department as any)?._id || '' : (item.department as string) || '',
+        departmentName: typeof item.department === 'object' ? (item.department as any)?.name || '' : '',
       }));
 
       setResellersData(formatted);
@@ -189,6 +194,11 @@ export function ResellersContent() {
           {value}
         </a>
       ),
+    },
+    {
+      key: 'departmentName',
+      label: 'DEPARTMENT',
+      render: (value) => <span>{value || '-'}</span>,
     },
    
     {
@@ -388,6 +398,7 @@ export function ResellersContent() {
           status: editingReseller.status,
           profileImage: editingReseller.image,
           commissionRate: editingReseller.commissionRate,
+          department: editingReseller.departmentId,
         } : null}
       />
     </>

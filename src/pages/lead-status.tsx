@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Dialog from '@/components/Dialog';
@@ -31,30 +31,6 @@ type LeadItem = {
   order: number;
 };
 
-// Validation schema
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required('Status name is required')
-    .min(2, 'Status name must be at least 2 characters')
-    .max(100, 'Status name must be at most 100 characters')
-    .matches(/^[a-zA-Z0-9\s&-]+$/, 'Status name can only contain letters, numbers, spaces, &, and -')
-    .test('not-reserved', 'This is a reserved status name and cannot be modified', function (value) {
-      const reservedNames = ['new lead', 'won', 'lost'];
-      // Only validate for edit mode if the original name wasn't reserved
-      const originalName = this.parent.originalName;
-      if (originalName && reservedNames.includes(originalName.toLowerCase())) {
-        return true; // Skip validation for reserved names being edited
-      }
-      return !reservedNames.includes(value?.toLowerCase());
-    }),
-
-  order: Yup.number()
-    .required('Order is required')
-    .integer('Order must be a whole number')
-    .min(1, 'Order must be at least 1')
-    .max(9999, 'Order must be at most 9999'),
-});
-
 export function LeadStatusContent() {
   const [allData, setAllData] = useState<LeadItem[]>([]);
   const [search, setSearch] = useState('');
@@ -77,6 +53,38 @@ export function LeadStatusContent() {
 
   const token = typeof window !== 'undefined' ? getAuthToken() : null;
   const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+
+  // Validation schema
+  const validationSchema = useMemo(() => Yup.object({
+    name: Yup.string()
+      .required('Status name is required')
+      .min(2, 'Status name must be at least 2 characters')
+      .max(100, 'Status name must be at most 100 characters')
+      .matches(/^[a-zA-Z0-9\s&-]+$/, 'Status name can only contain letters, numbers, spaces, &, and -')
+      .test('not-reserved', 'This is a reserved status name and cannot be modified', function (value) {
+        const reservedNames = ['new lead', 'won', 'lost'];
+        // Only validate for edit mode if the original name wasn't reserved
+        const originalName = this.parent.originalName;
+        if (originalName && reservedNames.includes(originalName.toLowerCase())) {
+          return true; // Skip validation for reserved names being edited
+        }
+        return !reservedNames.includes(value?.toLowerCase());
+      })
+      .test('unique-name', 'Status name already exists', function (value) {
+        if (!value) return true;
+        const normalized = value.trim().toLowerCase();
+        return !allData.some(item => 
+          item.name.trim().toLowerCase() === normalized && 
+          item._id !== this.parent._id
+        );
+      }),
+
+    order: Yup.number()
+      .required('Order is required')
+      .integer('Order must be a whole number')
+      .min(1, 'Order must be at least 1')
+      .max(9999, 'Order must be at most 9999'),
+  }), [allData]);
 
   // Initialize formik
   const formik = useFormik({
@@ -344,7 +352,7 @@ export function LeadStatusContent() {
               type="submit"
               form="lead-status-form"
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>

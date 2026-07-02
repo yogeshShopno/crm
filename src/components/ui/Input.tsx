@@ -115,7 +115,7 @@ const FormInput: React.FC<FormInputProps> = ({
     } else if (showSuccess) {
       classes += " border-green-500 ring-1 ring-red-500";
     } else if (isFocused) {
-      classes += " border-blue-500 ring-1 ring-blue-500/20";
+      classes += " border-primary ring-1 ring-ring/20";
     } else if (!disabled) {
       classes += " border-gray-300 hover:border-gray-400";
     }

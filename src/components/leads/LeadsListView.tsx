@@ -182,7 +182,7 @@ export default function LeadsListView({
                 href={`tel:${row.phone}`}
                 title="Call Now"
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1 rounded-md  px-2 py-0.5 text-xs font-medium text-blue-600 hover:bg-blue-100 transition-colors"
+                className="flex items-center gap-1 rounded-md  px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
               >
 
                 <Phone className="h-3 w-3" />
@@ -219,7 +219,7 @@ export default function LeadsListView({
                 href={`mailto:${row.email}`}
                 title="Send Email"
                 onClick={(e) => e.stopPropagation()}
-                className="text-blue-500 hover:text-blue-700 hover:underline transition-colors"
+                className="text-primary hover:text-primary hover:underline transition-colors"
               >
                 {row.email}
               </a>
@@ -242,7 +242,7 @@ export default function LeadsListView({
     {
       key: 'commissionAmount',
       label: 'COMMISSION',
-      render: (v) => (v && Number(v) > 0 ? <span className="font-bold text-blue-600">₹{Number(v).toLocaleString('en-IN')}</span> : <span className="text-gray-400">-</span>)
+      render: (v) => (v && Number(v) > 0 ? <span className="font-bold text-primary">₹{Number(v).toLocaleString('en-IN')}</span> : <span className="text-gray-400">-</span>)
     },
   ];
 

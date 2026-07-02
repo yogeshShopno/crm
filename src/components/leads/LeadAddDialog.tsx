@@ -204,7 +204,7 @@ export default function LeadAddDialog({
             type="button"
             onClick={() => formik.handleSubmit()}
             disabled={formik.isSubmitting}
-            className="px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-6 py-2.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {formik.isSubmitting
               ? 'Saving...'
@@ -342,7 +342,7 @@ export default function LeadAddDialog({
               name="isActive"
               checked={formik.values.isActive}
               onChange={formik.handleChange}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-ring"
             />
             <span className="text-sm font-medium text-gray-800">Active Lead</span>
           </label>
