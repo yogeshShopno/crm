@@ -30,7 +30,26 @@ interface HeaderProps {
 export default function Header({ toggleSidebar }: HeaderProps) {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      _id: 'notif-1',
+      title: 'New Lead Assigned',
+      message: 'A new lead has been assigned to you.',
+      type: 'lead',
+      relatedId: 'lead-1',
+      isRead: false,
+      createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    },
+    {
+      _id: 'notif-2',
+      title: 'New Task Created',
+      message: 'A new task has been assigned to you.',
+      type: 'task',
+      relatedId: 'task-1',
+      isRead: false,
+      createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    }
+  ]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
   const [markingAllRead, setMarkingAllRead] = useState(false);
@@ -63,8 +82,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
 
     return ""
   }
-    const token = getAuthToken();
-    if (!token) return;
+  const token = getAuthToken();
 
   const fetchProfile = useCallback(async () => {
 
@@ -158,17 +176,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
   }, []);
 
   const fetchNotifications = async () => {
-    try {
-      const token = getAuthToken();
-      if (!token) return;
-      const base = baseUrl.getBaseUrl?.endsWith('/') ? baseUrl.getBaseUrl.slice(0, -1) : baseUrl.getBaseUrl;
-      const res = await axios.get(`${base}/notification/my-notifications`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotifications(res.data?.data || []);
-    } catch (error) {
-      console.error('Failed to fetch notifications', error);
-    }
+    // Notifications are static mock data
   };
 
   useEffect(() => {
@@ -275,15 +283,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
             window.focus();
             try {
               if (!notif.isRead) {
-                await axios.put(
-                  `${baseUrl.getBaseUrl?.endsWith('/') ? baseUrl.getBaseUrl.slice(0, -1) : baseUrl.getBaseUrl}/notification/mark-read/${notif._id}`,
-                  {},
-                  {
-                    headers: {
-                      Authorization: `Bearer ${getAuthToken()}`,
-                    },
-                  }
-                );
+                setNotifications((prev) => prev.filter((n) => n._id !== notif._id));
               }
               if (notif.type === 'task') {
                 router.push('/tasks');
@@ -332,65 +332,34 @@ export default function Header({ toggleSidebar }: HeaderProps) {
   // FIXED: Mark single notification as read
   const markAsReadSingle = async (e: React.MouseEvent, notifId: string) => {
     e.stopPropagation();
-    try {
-      const token = getAuthToken();
-      const base = baseUrl.getBaseUrl?.endsWith('/') ? baseUrl.getBaseUrl.slice(0, -1) : baseUrl.getBaseUrl;
-      await axios.put(`${base}/notification/mark-read/${notifId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      // Remove the read notification from the list
-      setNotifications(prev => prev.filter(notification => notification._id !== notifId));
-    } catch (error) {
-      console.error('Failed to mark read', error);
-    }
+    // Remove the read notification from the list
+    setNotifications(prev => prev.filter(notification => notification._id !== notifId));
   };
 
   // FIXED: Mark all notifications as read
   const markAllAsRead = async () => {
     if (markingAllRead) return;
     setMarkingAllRead(true);
-    try {
-      const token = getAuthToken();
-      const base = baseUrl.getBaseUrl?.endsWith('/') ? baseUrl.getBaseUrl.slice(0, -1) : baseUrl.getBaseUrl;
-      await axios.put(`${base}/notification/mark-all-read`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      // Clear all notifications from the dropdown
-      setNotifications([]);
-    } catch (error) {
-      console.error('Failed to mark all as read', error);
-    } finally {
-      setMarkingAllRead(false);
-    }
+    // Clear all notifications from the dropdown
+    setNotifications([]);
+    setMarkingAllRead(false);
   };
 
   // FIXED: Handle notification click - mark as read and navigate
   const handleNotificationClick = async (notif: Notification) => {
-    try {
-      const token = getAuthToken();
-      if (!notif.isRead) {
-        const base = baseUrl.getBaseUrl?.endsWith('/') ? baseUrl.getBaseUrl.slice(0, -1) : baseUrl.getBaseUrl;
-        await axios.put(`${base}/notification/mark-read/${notif._id}`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+    if (!notif.isRead) {
+      // Remove the clicked notification from the list
+      setNotifications(prev => prev.filter(n => n._id !== notif._id));
+    }
 
-        // Remove the clicked notification from the list
-        setNotifications(prev => prev.filter(n => n._id !== notif._id));
-      }
+    setShowNotifications(false);
 
-      setShowNotifications(false);
-
-      if (notif.type === 'task') {
-        router.push(`/tasks`);
-      } else if (notif.type === 'lead') {
-        router.push(`/leads/list`);
-      } else {
-        router.push(`/settlements`);
-      }
-    } catch (error) {
-      console.error('Failed to mark read', error);
+    if (notif.type === 'task') {
+      router.push(`/tasks`);
+    } else if (notif.type === 'lead') {
+      router.push(`/leads/list`);
+    } else {
+      router.push(`/settlements`);
     }
   };
 

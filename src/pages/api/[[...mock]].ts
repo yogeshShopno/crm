@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+  import type { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
@@ -133,6 +133,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const collectionKey = getCollectionKey(mainType);
 
   if (method === 'GET') {
+    if (mainType === 'reseller' && subType === 'me') {
+      return res.status(200).json({ data: db.users[0] || { _id: 'user1', fullName: 'Alice Smith', email: 'alice@example.com' } });
+    }
     if (mainType === 'settings') {
       if (subType === 'lead-fields') {
         const fields = [
@@ -192,7 +195,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Default collection fetches
     if (collectionKey && db[collectionKey]) {
-      if (subType) {
+      if (subType && subType !== 'me') {
         const item = db[collectionKey].find((x: any) => x._id === subType || x.id === subType);
         if (item) {
           return res.status(200).json({ data: item });

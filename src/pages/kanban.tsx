@@ -141,28 +141,13 @@ export default function LeadsPage() {
   };
 
   useEffect(() => {
-    const loadRequiredFields = async () => {
+    const loadRequiredFields = () => {
       const saved = sessionStorage.getItem('leadRequiredFields');
       if (saved) {
         try {
           setRequiredFields(JSON.parse(saved));
           return;
         } catch {}
-      }
-      // Fetch from API
-      const token = getAuthToken();
-      if (token) {
-        try {
-          const res = await axios.get(baseUrl.settingsRequiredFields, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          const reqs = res.data?.data?.requiredLeads || [];
-          setRequiredFields(reqs);
-          sessionStorage.setItem('leadRequiredFields', JSON.stringify(reqs));
-          return;
-        } catch (err) {
-          console.error(err);
-        }
       }
       setRequiredFields(['customerName', 'customerContact', 'leadSource', 'leadStatus']);
     };

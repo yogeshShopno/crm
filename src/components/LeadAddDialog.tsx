@@ -116,27 +116,22 @@ export default function LeadAddDialog({
         setLoading(true);
         setFormError(null);
 
-        const [sourcesRes, statusRes, staffRes, settingsRes] = await Promise.all([
+        const [sourcesRes, statusRes, staffRes] = await Promise.all([
           axios.get(baseUrl.leadSources, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(baseUrl.leadStatuses, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(baseUrl.getAllStaff, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get(baseUrl.settingsRequiredFields, { headers: { Authorization: `Bearer ${token}` } }).catch(() => null),
         ]);
 
         setLeadSources(sourcesRes.data?.data || []);
         setLeadStatuses(statusRes.data?.data || []);
         setStaffList(staffRes.data?.data || []);
 
-        if (settingsRes) {
-          const reqs = settingsRes.data?.data?.requiredLeads || [];
-          setRequiredFields(reqs);
-          if (typeof window !== 'undefined') {
-            window.sessionStorage.setItem('leadRequiredFields', JSON.stringify(reqs));
-          }
-        } else if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined') {
           const saved = window.sessionStorage.getItem('leadRequiredFields');
           if (saved) {
             try { setRequiredFields(JSON.parse(saved)); } catch {}
+          } else {
+            setRequiredFields(['customerName', 'customerContact', 'leadSource', 'leadStatus']);
           }
         }
 
